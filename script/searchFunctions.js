@@ -47,8 +47,10 @@ $('input[name="btnSave"]').click(function (e) {
         dataType: 'json',
         // Lyckat
         success: function (result) {
-            // Appenda kommentar till kommentarsfältet
-            commentArea.prepend('<p><b>' + result['date'] + ': </b><i>' + result['comment'] + '</i>');
+            if (result['comment'] !== "") { // Om kommentaren inte är tom
+                // Appenda kommentar till kommentarsfältet
+                commentArea.prepend('<p><b>' + result['date'] + ': </b><i>' + result['comment'] + '</i>');
+            }
         },
         // Misslyckat
         error: function (xhr, status, error) {
