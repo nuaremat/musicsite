@@ -1,0 +1,245 @@
+.errorClass {
+	color: red;
+	font-size: 16px;
+	font-weight: bold;
+}
+
+.imgAnimation{
+	width: 25%;
+	height: 25%;
+    margin: 10px 0 0;
+    display: inline;
+}
+
+.imgAnimation:active{
+	-moz-transform: scale(4);
+}
+
+* {
+    outline: none;
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+	background-color: #111;
+    color: #fff;
+    font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
+    letter-spacing: 1px;
+    -webkit-font-smoothing: antialiased;
+}
+
+h1 {
+	font-size: 14px;
+    text-transform: uppercase;
+	color: #fff;
+	margin: 5px;
+}
+
+li {
+	font-size: 14px;
+	color: #fff;
+	padding: 3px;
+}
+
+header {
+	width: 100%;
+    height: 50px;
+	font-size: 1.2em;
+	color: #fff;
+    background-color: #1c1c1c;
+    line-height: 50px;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    text-align: center;
+}
+
+/*
+#menu {
+	padding-left: 40px;
+	margin-top: 10px;
+	padding-top: 10px;
+	padding-bottom: 10px;
+}
+
+#menu ul {
+	margin: 0px;
+	padding: 0px;
+	text-align: center;
+	list-style-type: none;
+	display: inline;
+	font-size: 14px;
+	color: #fff;
+}
+
+#menu ul li {
+	display: inline;
+	border: solid black 1px;
+	padding-top: 7px;
+	padding-bottom: 7px;
+	padding-right: 30px;
+	padding-left: 30px;
+	margin-right: 10px;
+}
+
+#menu ul li a {
+	text-decoration: none;
+	color: #fff;
+}
+
+#main {
+	width: 100%;
+}
+*/
+
+#content {
+	width: 70%;
+	min-height: 300px;
+	float: left;
+	font-size: 14px;
+	padding: 10px;
+	margin: 0;
+}
+
+nav {
+	width: 25%;
+	padding-top: 20px;	
+	padding-right: 25px;
+	float: right;
+	font-size: 14px;
+	line-height: 60px;
+	min-height: 300px;
+}
+
+nav ul {
+	list-style-type: none;
+    padding: 0;
+}
+
+nav ul li {
+    padding: 0;
+    border-bottom: 1px solid #111;
+}
+
+nav a {
+	line-height: 20px;
+    margin: 0;
+	text-decoration: none;
+	background-color: #1c1c1c;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	padding-left: 30px;
+	padding-right: 30px;
+	height: auto;
+	display: block;
+    color: #fff;
+    transition: all 200ms;
+}
+
+nav a:hover {
+    background-color: #0074D9;
+	color: #fff;
+}
+
+footer {
+	width: 100%;
+	height: 50px;
+	clear: both;
+	text-align: center;
+	color: #fff;
+	padding-top: 10px;
+	font-size: 12px;
+	clear: both;
+}
+
+#wrapper {
+	margin-top: 40px; 
+	margin-bottom: 40px;
+	margin-left: auto;
+	margin-right: auto;
+	min-height: 500px;
+	width: 90%;
+}
+
+input[type="submit"],
+input[type="reset"],
+input[type="button"],
+button {
+    background: none;
+    border: 1px solid #aaa;
+    color: #fff;
+    font-size: 14px;
+    width: 100px;
+    outline: none;
+    cursor: pointer;
+    margin: 10px 0;
+    transition: all 200ms;
+}
+
+input[type="submit"]:hover,
+input[type="reset"]:hover,
+input[type="button"]:hover,
+button:hover {
+    background: #0074D9;
+    border: 1px solid #0074D9;
+}
+
+hr {
+    border: none;
+    border-bottom: 1px solid #aaa;
+}
+
+fieldset {
+    border: 1px solid #aaa;
+    margin-bottom: 10px;
+}
+
+img {
+    max-width: 100%;
+}
+
+/* --- Accordion ---  */
+#accordion {
+    width: 100%;
+}
+
+#accordion h3 {
+    background: #0074D9;
+    color: #fff;
+}
+
+#accordion .ui-accordion-header {
+    border: none;
+}
+
+#accordion .ui-accordion-content {
+    background-color: #1c1c1c;
+    border: none;
+}
+
+#accordion .ui-accordion-content > * {
+    color: #fff;
+}
+
+.toggle-button, .like-button {
+    background: none;
+    border: 1px solid #aaa;
+    color: #fff;
+    font-size: 14px;
+    outline: none;
+    cursor: pointer;
+    margin: 10px 0;
+    transition: all 200ms;
+    padding: 10px 30px;
+    display: inline-block;
+    text-decoration: none;
+}
+
+.toggle-button:hover, .like-button:hover {
+    background: #0074D9;
+    border: 1px solid #0074D9;
+}
+
+.toggle-result {
+    display: none;
+}
