@@ -8,6 +8,13 @@
 	//$admin = "secretpage";
 	
 	include("incl/header.php");
+
+    try {
+        $db = myDBConnect();
+    } catch (Exception $e) {
+        // Skriv ut error på sidan senare.
+        $error = 'Error connecting to DB: ' . $e->getMessage();
+    }
 	
 ?>
 
@@ -42,6 +49,16 @@
             <input type="button" id="btnReset" name="btnReset" value="Reset" />
         </form>
     </fieldset>
+    
+    <?php
+
+        $stmt = mysqli_query($db, 'SELECT * FROM tblartist;');
+
+        while ($record = mysqli_fetch_assoc($stmt)) {
+            echo('Some column: ' . $record['name']);
+        }
+    
+    ?>
 
     <div id="accordion"> <!-- Accordion start -->
 
