@@ -12,25 +12,30 @@
         
         // Kod för att lista kommentarer ur databasen här
         $comments = $inDBConnection->query('SELECT * FROM tblcomment;');
-        
-        while ($record = $comments->fetch()) {
-            $id = $record['id'];
-            $songid = $record['songid'];
-            $text = $record['text'];
-            $insertdate = $record['insertdate'];
-            
-            echo ('<h3>' . $id . '</h3>');
-            echo ('<div><form action="adminComment.php" method="post" name="frmComment">');
-            echo ('id: ' . $id . '<br />');
-            echo ('songid: ' . $songid . '<br />');
-            echo ('text: ' . $text . '<br />');
-            // hidden id
-            echo ('<input type="hidden" name="hidId" value="' . $id . '" />');
-            // hidden text
-            echo ('<input type="hidden" name="hidText" value="' . $text . '" />');
-            // delete button
-            echo ('<input type="submit" name="btnDelete" value="Delete" />');
-            echo ('</form></div>');
+
+        // Kollar om det finns några rader i tabellen
+        if ($comments->rowCount() == 0) {
+            echo ('Det finns inga kommentarer i databasen!');
+        } else {
+            while ($record = $comments->fetch()) {
+                $id = $record['id'];
+                $songid = $record['songid'];
+                $text = $record['text'];
+                $insertdate = $record['insertdate'];
+
+                echo ('<h3>' . $id . '</h3>');
+                echo ('<div><form action="adminComment.php" method="post" name="frmComment">');
+                echo ('id: ' . $id . '<br />');
+                echo ('songid: ' . $songid . '<br />');
+                echo ('text: ' . $text . '<br />');
+                // hidden id
+                echo ('<input type="hidden" name="hidId" value="' . $id . '" />');
+                // hidden text
+                echo ('<input type="hidden" name="hidText" value="' . $text . '" />');
+                // delete button
+                echo ('<input type="submit" name="btnDelete" value="Delete" />');
+                echo ('</form></div>');
+            }
         }
         
     }
@@ -45,12 +50,7 @@
 	function deleteComment($inDBConnection, $inCommentId) {
         
         // Kod för att ta bort klickad kommentar
-        $comments = $inDBConnection->prepare('DELETE FROM tblcomment WHERE id=?;');
-        $comments->bindParam(1, $inCommentId);
+        $comments = $inDBConnection->prepare('DELETE FROM tblcomment WHERE id=' . $inCommentId . ';');
         $comments->execute();
-
-        $count = $comments->rowCount();
-
-        return $count == 1;
         
     }

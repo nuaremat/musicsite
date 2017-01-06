@@ -44,6 +44,14 @@
         </div>
 -->
         <?php listComments($db); ?>
+        <?php
+        
+            if (isset($_POST)) {
+                //var_dump($_POST['hidId']);
+                deleteComment($db, $_POST['hidId']);
+            }
+        
+        ?>
     </div>
 </div>
 
