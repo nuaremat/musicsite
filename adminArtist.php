@@ -10,10 +10,9 @@
 	include("incl/header.php");
 
     try {
-        $db = myDBConnect();
+      $db = myDBConnect();
     } catch (Exception $e) {
-        // Skriv ut error på sidan senare.
-        $error = 'Error connecting to DB: ' . $e->getMessage();
+      die("Failed connecting to DB: " . $e->getMessage());
     }
 	
 ?>

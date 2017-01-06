@@ -7,6 +7,14 @@
 	//$admin = "secretpage";
 	
 	include("incl/header.php");
+    include("src/commentFunctions.php");
+
+    try {
+        $db = myDBConnect();
+    } catch (Exception $e) {
+        // Skriv ut error på sidan senare.
+        $error = 'Error connecting to DB: ' . $e->getMessage();
+    }
 	
 ?>
 
@@ -18,6 +26,7 @@
     <!-- Hårdkodad HTML5 för Admin Comment -->
             
     <div id="accordion">
+<!--
         <h3>Kommentar-ID: 58</h3>
         <div>
             <form action="adminComment.php" method="post" name="frmComment">
@@ -33,22 +42,8 @@
             </form>
 
         </div>
-        
-        <h3>Kommentar-ID: 57</h3>
-        <div>
-
-            <form action="adminComment.php" method="post" name="frmComment">
-
-                id: 57<br />
-                songid: 22<br />
-                text: Bästa låten...<br />
-                insertdate: 2013-09-27 08:58:55<br />
-                <input type="hidden" name="hidId" value="57" />
-                <input type="hidden" name="hidText" value="B�sta l�ten..." />
-                <input type="submit" name="btnDelete" value="Delete" />
-
-            </form>
-        </div>
+-->
+        <?php listComments($db); ?>
     </div>
 </div>
 
