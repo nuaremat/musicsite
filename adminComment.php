@@ -8,13 +8,6 @@
 	
 	include("incl/header.php");
     include("src/commentFunctions.php");
-
-    try {
-        $db = myDBConnect();
-    } catch (Exception $e) {
-        // Skriv ut error på sidan senare.
-        $error = 'Error connecting to DB: ' . $e->getMessage();
-    }
 	
 ?>
 
@@ -46,8 +39,7 @@
         <?php listComments($db); ?>
         <?php
         
-            if (isset($_POST)) {
-                //var_dump($_POST['hidId']);
+            if (isset($_POST['btnDelete'])) {
                 deleteComment($db, $_POST['hidId']);
             }
         

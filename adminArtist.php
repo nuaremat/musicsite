@@ -8,12 +8,7 @@
 	//$admin = "secretpage";
 	
 	include("incl/header.php");
-
-    try {
-      $db = myDBConnect();
-    } catch (Exception $e) {
-      die("Failed connecting to DB: " . $e->getMessage());
-    }
+    include("src/artistFunctions.php");
 	
 ?>
 
@@ -29,26 +24,10 @@
 
         <span id="jsErrorMsg" class="errorClass"></span>
 
-        <form action="adminArtist.php" method="post" name="frmNewUpdateArtist" id="frmNewUpdateArtist" enctype="multipart/form-data">
-            <input type="hidden" id="hidId" name="hidId" />
-            <input type="hidden" id="hidPictureFileName" name="hidPictureFileName" />
-            <label>
-                Artist
-                <br />
-                <input type="text" id="txtArtist" name="txtArtist" title="Artist"/>
-            </label>
-            <br />
-            <label>
-                Picture
-                <br />
-                <input type="file" id="filePictureFileName" name="filePictureFileName" title="Picture" />
-            </label>
-            <br />
-            <input type="submit" id="btnSave" name="btnSave" value="Save" />
-            <input type="button" id="btnReset" name="btnReset" value="Reset" />
-        </form>
+        <?php printArtistForm(); ?>
     </fieldset>
     
+<!--
     <?php
 
         $stmt = mysqli_query($db, 'SELECT * FROM tblartist;');
@@ -58,6 +37,7 @@
         }
     
     ?>
+-->
 
     <div id="accordion"> <!-- Accordion start -->
 

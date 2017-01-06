@@ -7,7 +7,16 @@
 	*
 	*	Funktionen tar inte emot någon data och returnerar heller ingen data.
 	*/
-    function printArtistForm() {}
+    function printArtistForm() {
+        echo ('<form action="adminArtist.php" method="post" name="frmNewUpdateArtist" id="frmNewUpdateArtist" enctype="multipart/form-data">');
+        echo ('<input type="hidden" id="hidId" name="hidId" />');
+        echo ('<input type="hidden" id="hidPictureFileName" name="hidPictureFileName" />');
+        echo ('<label>Artist<br /><input type="text" id="txtArtist" name="txtArtist" title="Artist"/></label><br />');
+        echo ('<label>Picture<br /><input type="file" id="filePictureFileName" name="filePictureFileName" title="Picture" /></label><br />');
+        echo ('<input type="submit" id="btnSave" name="btnSave" value="Save" />');
+        echo ('<input type="button" id="btnReset" name="btnReset" value="Reset" />');
+        echo ('</form>');
+    }
     
 	/**
 	*	Funktionen listArtists söker ut samtliga artister som finns lagrade i databasen och skriver ut dessa som egna formulär (frmArtist).

@@ -3,6 +3,14 @@
     ini_set("display_errors", 1);
 
     include('src/databaseFunctions.php');
+
+    try {
+        $db = myDBConnect();
+    } catch (Exception $e) {
+        // Skriv ut error på sidan senare.
+        $error = 'Error connecting to DB: ' . $e->getMessage();
+    }
+
 ?>
 <!doctype html>
 <html lang="en">
