@@ -1,29 +1,42 @@
 # musicsite
 school project
 
-To do:  ❌ ✅ ⌛
+##To do:  ❌ ✅ ⌛
 
-commentFunctions.php
+###commentFunctions.php
 ✅ function listComments()
+
 ✅ deleteComment()
 
-artistFunctions.php
+###artistFunctions.php
 ✅ printArtistForm()
+
 ⌛ listArtists()
+
 ❌ updateArtist()
+
 ❌ deleteArtist()
+
 ❌ insertArtist()
 
-songFunctions.php
+###songFunctions.php
 ❌ printSongForm()
+
 ❌ listSongs()
+
 ❌ updateSong()
+
 ❌ deleteSong()
+
 ❌ insertSong()
 
-searchFunctions.php
+###searchFunctions.php
 ❌ printSearchForm()
+
 ❌ listArtists()
+
 ❌ listSongs()
+
 ❌ printCommentForm()
-❌ listComments
+
+❌ listComments()
