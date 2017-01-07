@@ -4,14 +4,14 @@ school project
 ##To do:  ❌ ✅ ⌛
 
 ###commentFunctions.php
-✅ function listComments()
+✅ listComments()
 
 ✅ deleteComment()
 
 ###artistFunctions.php
 ✅ printArtistForm()
 
-⌛ listArtists()
+✅ listArtists()
 
 ❌ updateArtist()
 

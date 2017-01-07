@@ -25,7 +25,39 @@
 	*
 	*	@param resurce $dbConnection Databaskoppling
 	*/
-	function listArtists($dbConnection) {}
+	function listArtists($dbConnection) {
+        // Kod för att lista kommentarer ur databasen här
+        $artists = $dbConnection->query('SELECT * FROM tblartist;');
+
+        // Kollar om det finns några rader i tabellen
+        if ($artists->rowCount() == 0) {
+            echo ('Det finns inga artister i databasen!');
+        } else {
+            while ($record = $artists->fetch()) {
+                $id = $record['id'];
+                $name = $record['name'];
+                $picture = $record['picture'];
+                $changedate = $record['changedate'];
+
+                echo ('<h3>' . $name . '</h3>');
+                echo ('<div><form action="adminArtist.php" method="post" name="frmArtist">');
+                echo ('id: ' . $id . '<br />');
+                echo ('name: ' . $name . '<br />');
+                echo ('picture: ' . $picture . '<br />');
+                echo ('changedate: ' . $changedate . '<br />');
+                echo ('<a href="upload_jpg/' . $picture . '" rel="lightbox"><img src="upload_jpg/' . $picture . '" alt="' . $picture . '" class="imgAnimation" rel="lightbox" /></a><br />');
+                echo ('<input type="button" name="btnEdit" value="Edit" >');
+                echo ('<input type="submit" name="btnDelete" value="Delete" />');
+                // hidden id
+                echo ('<input type="hidden" name="hidId" value="' . $id . '" />');
+                // hidden picture filename
+                echo ('<input type="hidden" name="hidPictureFileName" value="' . $picture . '.jpg" />');
+                // hidden artist name
+                echo ('<input type="hidden" name="hidArtist" value="' . $name . '" />');
+                echo ('</form></div>');
+            }
+        }
+    }
 	
 	/**
 	*	Funktionen insertArtist sparar en ny artist till databasen samt anropar validateAndMoveUploadedFile() för att flytta den 
