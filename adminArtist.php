@@ -23,21 +23,21 @@
         <legend>New/Edit Artist</legend>
 
         <span id="jsErrorMsg" class="errorClass"></span>
+        
+        <?php
+            if (isset($_POST['btnSave'])) {
+                insertArtist($db, $_POST['txtArtist'], $_FILES['filePictureFileName']);
+                echo " " . $_POST['txtArtist'] . " tillagd!";
+            } elseif (isset($_POST['btnDelete'])) {
+                $hidId = $_POST['hidId'];
+                $hidPictureFileName = $_FILES['hidPictureFileName'];
+                
+                deleteArtist($db, $hidId, $hidPictureFileName);
+            }
+        ?>
 
         <?php printArtistForm(); ?>
     </fieldset>
-    
-<!--
-    <?php
-
-        $stmt = mysqli_query($db, 'SELECT * FROM tblartist;');
-
-        while ($record = mysqli_fetch_assoc($stmt)) {
-            echo('Some column: ' . $record['name']);
-        }
-    
-    ?>
--->
 
     <div id="accordion"> <!-- Accordion start -->
 

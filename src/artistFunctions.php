@@ -68,7 +68,25 @@
 	*	@param string $inArtist Aristnamn
 	*	@param string $inNewPictureFileName Filnamn (jpg-bilden)
 	*/
-    function insertArtist($dbConnection, $inArtist, $inNewPictureFileName) {}
+
+    // lite hjälp tagen härifrån http://www.w3schools.com/php/php_file_upload.asp
+
+    function insertArtist($dbConnection, $inArtist, $inNewPictureFileName) {
+        
+        $stmt = $dbConnection->prepare('INSERT INTO tblartist(name, picture) VALUES(?, ?);');
+        $stmt->bindParam(1, $inArtist);
+        $stmt->bindParam(2, $inNewPictureFileName["name"]);
+        $stmt->execute();
+        
+        $targetDir = "upload_jpg/";
+        $targetFile = $targetDir . basename($inNewPictureFileName["name"]);
+        
+        if (move_uploaded_file($inNewPictureFileName['tmp_name'], $targetFile)) {
+            echo "Filen är uppladdad!";
+        } else {
+            echo "Det gick inte att ladda upp filen!";
+        }
+    }
 	
 	/**
 	*	Funktionen updateArtist uppdaterar en befinlig artist i databasen. Om en ny jpg-fil har angivits tar funktionen bort den gamla och 
@@ -92,6 +110,10 @@
 	*	@param $inArtistId string Primärnyckeln för artisten som skall tas bort
 	*	@param string $inPictureFileName Filnamn på jpg-bilden
 	*/
-    function deleteArtist($dbConnection, $inArtistId, $inPictureFileName) {}
+    function deleteArtist($dbConnection, $inArtistId, $inPictureFileName) {
+        $stmt = $dbConnection->prepare('DELETE FROM tblartist WHERE id=?');
+        $stmt->bindParam(1, $inArtistId);
+        $stmt->execute();
+    }
     
 	

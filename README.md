@@ -1,7 +1,9 @@
 # musicsite
 school project
 
-##To do:  ❌ ✅ ⌛
+##To do:
+
+❌ ✅ ⌛
 
 ###commentFunctions.php
 ✅ listComments()
@@ -15,9 +17,9 @@ school project
 
 ❌ updateArtist()
 
-❌ deleteArtist()
+✅ deleteArtist()
 
-❌ insertArtist()
+✅ insertArtist()
 
 ###songFunctions.php
 ❌ printSongForm()
