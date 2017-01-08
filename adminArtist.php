@@ -33,9 +33,13 @@
             } elseif (isset($_POST['btnDelete'])) {
                 
                 $hidId = $_POST['hidId'];
-                $filePictureFileName = $_FILES['filePictureFileName'];
+                $hidPictureFileName = $_POST['hidPictureFileName'];
+                $hidArtist = $_POST['hidArtist'];
+                $message = $hidArtist . " borttagen!";
                 
-                deleteArtist($db, $hidId, $filePictureFileName);
+                echo $message;
+                
+                deleteArtist($db, $hidId, $hidPictureFileName);
                 
             } elseif (isset($_POST['btnEdit'])) {
                 

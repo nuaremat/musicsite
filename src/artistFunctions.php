@@ -51,7 +51,7 @@
                 // hidden id
                 echo ('<input type="hidden" name="hidId" value="' . $id . '" />');
                 // hidden picture filename
-                echo ('<input type="hidden" name="hidPictureFileName" value="' . $picture . '.jpg" />');
+                echo ('<input type="hidden" name="hidPictureFileName" value="' . $picture . '" />');
                 // hidden artist name
                 echo ('<input type="hidden" name="hidArtist" value="' . $name . '" />');
                 echo ('</form></div>');
@@ -116,9 +116,20 @@
 	*	@param string $inPictureFileName Filnamn på jpg-bilden
 	*/
     function deleteArtist($dbConnection, $inArtistId, $inPictureFileName) {
+        /* Ta bort raden i databasen */
         $stmt = $dbConnection->prepare('DELETE FROM tblartist WHERE id=?');
         $stmt->bindParam(1, $inArtistId);
         $stmt->execute();
+        
+        /* Ta bort bildfilen */
+        // Sökväg till bildfilen
+        $inPicturePath = 'upload_jpg/' . $inPictureFileName;
+        
+        // Kolla om filen finns
+        if(file_exists($inPicturePath)) {
+            // Ta bort filen
+            unlink($inPicturePath);
+        }
     }
     
 	
