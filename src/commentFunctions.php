@@ -50,7 +50,8 @@
 	function deleteComment($inDBConnection, $inCommentId) {
         
         // Kod för att ta bort klickad kommentar
-        $comments = $inDBConnection->prepare('DELETE FROM tblcomment WHERE id=' . $inCommentId . ';');
+        $comments = $inDBConnection->prepare('DELETE FROM tblcomment WHERE id=?;');
+        $comments->bindParam(1, $inCommentId);
         $comments->execute();
         
     }

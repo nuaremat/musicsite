@@ -19,14 +19,17 @@
     <!-- Hårdkodad HTML5 för Admin Comment -->
             
     <div id="accordion">
-        <?php listComments($db); ?>
         <?php
         
             if (isset($_POST['btnDelete'])) {
-                deleteComment($db, $_POST['hidId']);
+                $hidId = $_POST['hidId'];
+                
+                deleteComment($db, $hidId);
             }
         
         ?>
+        
+        <?php listComments($db); ?>
     </div>
 </div>
 
