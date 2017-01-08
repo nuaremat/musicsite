@@ -26,13 +26,25 @@
         
         <?php
             if (isset($_POST['btnSave'])) {
+                
                 insertArtist($db, $_POST['txtArtist'], $_FILES['filePictureFileName']);
                 echo " " . $_POST['txtArtist'] . " tillagd!";
-            } elseif (isset($_POST['btnDelete'])) {
-                $hidId = $_POST['hidId'];
-                $hidPictureFileName = $_FILES['hidPictureFileName'];
                 
-                deleteArtist($db, $hidId, $hidPictureFileName);
+            } elseif (isset($_POST['btnDelete'])) {
+                
+                $hidId = $_POST['hidId'];
+                $filePictureFileName = $_FILES['filePictureFileName'];
+                
+                deleteArtist($db, $hidId, $filePictureFileName);
+                
+            } elseif (isset($_POST['btnEdit'])) {
+                
+                $hidId = $_POST['hidId'];
+                $filePictureFileName = $_POST['filePictureFileName'];
+                $hidPictureFileName = $_FILES['hidPictureFileName'];
+                $hidArtist = $_POST['hidArtist'];
+                
+                updateArtist($db, $hidId, $hidArtist, $newPictureFileName, $hidPictureFileName);
             }
         ?>
 

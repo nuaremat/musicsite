@@ -99,7 +99,12 @@
 	*	@param string $inNewPictureFileName Filnamn på den nya jpg-bilden
 	*	@param string $inOldPictureFileName	Filnamn på den gamla jpg-bilden
 	*/
-	function updateArtist($dbConnection, $inArtistId, $inArtist, $inNewPictureFileName, $inOldPictureFileName) {}
+	function updateArtist($dbConnection, $inArtistId, $inArtist, $inNewPictureFileName, $inOldPictureFileName) {
+        $stmt = $dbConnection->prepare('UPDATE tblartist SET picture=? WHERE id=?;');
+        $stmt->bindParam(1, $inNewPictureFileName);
+        $stmt->bindParam(2, $inArtistId);
+        $stmt->execute();
+    }
 	
 	/**
 	*	Funktionen deleteArtist tar bort en befinlig artist från databasen. Därtill tar funktionen bort den jpg-fil samt samtliga ogg-filer som
