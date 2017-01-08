@@ -172,7 +172,7 @@ button {
     width: 100px;
     outline: none;
     cursor: pointer;
-    margin: 10px 0;
+    margin: 10px 5px;
     transition: all 200ms;
 }
 

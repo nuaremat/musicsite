@@ -8,13 +8,21 @@
 	*	Funktionen tar inte emot någon data och returnerar heller ingen data.
 	*/
     function printArtistForm() {
+        // Form start tag
         echo ('<form action="adminArtist.php" method="post" name="frmNewUpdateArtist" id="frmNewUpdateArtist" enctype="multipart/form-data">');
+        // Hidden Artist ID
         echo ('<input type="hidden" id="hidId" name="hidId" />');
+        // Hidden picture filename
         echo ('<input type="hidden" id="hidPictureFileName" name="hidPictureFileName" />');
+        // Text input
         echo ('<label>Artist<br /><input type="text" id="txtArtist" name="txtArtist" title="Artist"/></label><br />');
+        // File input
         echo ('<label>Picture<br /><input type="file" id="filePictureFileName" name="filePictureFileName" title="Picture" /></label><br />');
+        // Save submit
         echo ('<input type="submit" id="btnSave" name="btnSave" value="Save" />');
+        // Reset button
         echo ('<input type="button" id="btnReset" name="btnReset" value="Reset" />');
+        // Form end tag
         echo ('</form>');
     }
     
