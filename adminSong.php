@@ -7,6 +7,7 @@
 //	$admin = "secretpage";
 	
 	include("incl/header.php");
+    include("src/songFunctions.php");
 	
 ?>
 <div id="content">
@@ -21,46 +22,7 @@
 
         <span id="jsErrorMsg" class="errorClass"></span>
 
-        <form action="adminSong.php" method="post" id="frmNewUpdateSong" name="frmNewUpdateSong" enctype="multipart/form-data">
-
-        <input type="hidden" id="hidId" name="hidId" />
-            <input type="hidden" id="hidSoundFileName" name="hidSoundFileName" />
-            <label>
-                Artist
-                <br />
-                <select id="selArtistId" name="selArtistId" title="Artist" autofocus="autofocus">
-                <option value="0">Choose Artist</option>
-                <option value="76">AC/DC</option>
-                <option value="77">Laleh</option>
-                </select>
-            </label>
-            <br />
-
-            <label>
-                Song
-                <br />
-                <input type="text" id="txtTitle" name="txtTitle" title="Title"/>
-            </label>
-            <br />
-
-            <label>
-                Sound
-                <br />
-                <input type="file" id="fileSoundFileName" name="fileSoundFileName" title="File" />
-            </label>
-            <br />
-
-            <label>
-                Count
-                <br />
-                <input type="text" id="txtCount" name="txtCount" title="Count" />
-            </label>
-            <br />
-
-            <input type="submit" id="btnSave" name="btnSave" value="Save" />
-            <input type="button" id="btnReset" name="btnReset" value="Reset" />
-
-        </form>
+        <?php printSongForm($db); ?>
 
     </fieldset>
 
