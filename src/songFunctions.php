@@ -14,8 +14,7 @@
     	$artists = $inDBConnection->query('SELECT * FROM tblartist;');
 
     	// Lägger in allt som ska skrivas i en sträng som konkatineras kontinuerligt
-  		$skriv = '<legend>' . 'New/Edit Song' . '</legend>' . '<span id="jsErrorMsg" class="errorClass"></span>';
-    	$skriv .= '<form action="adminSong.php" method="post" id="frmNewUpdateSong" name="frmNewUpdateSong" enctype="multipart/form-data">';
+    	$skriv = '<form action="adminSong.php" method="post" id="frmNewUpdateSong" name="frmNewUpdateSong" enctype="multipart/form-data">';
     	$skriv .= '<input type="hidden" id="hidId" name="hidId" />' . '<input type="hidden" id="hidSoundFileName" name="hidSoundFileName" />';
     	$skriv .= '<label>' . 'Artist' . '<br />' . '<select id="selArtistId" name="selArtistId" title="Artist" autofocus="autofocus">';
     	$skriv .= '<option value="0">Choose Artist</option>';
@@ -86,21 +85,7 @@
 				// Skriver ut den aktuella låtens formulär, för att nollställa $skriv nästa iteration
 				echo($skriv);
 			}
-
     	}
-
-    	
-    	
-/*
-<fieldset>
-        <legend>New/Edit Song</legend>
-
-        <span id="jsErrorMsg" class="errorClass"></span>
-
-        <?php printSongForm($db); ?>
-
-    </fieldset>
-*/
     }
 	
 	/**
@@ -114,7 +99,29 @@
 	*	@param string $inTitle Sångtitel
 	*	@param string $inNewSongFileName Filnamn (ogg-ljudet)
 	*/
-	function insertSong($inDBConnection, $inArtistId, $inCount, $inTitle, $inNewSongFileName) {}
+	function insertSong($inDBConnection, $inArtistId, $inCount, $inTitle, $inNewSongFileName) {
+
+
+
+
+		$stmt = $inDBConnection->prepare('INSERT INTO tblsong(title, sound, count, artistid) VALUES(?, ?, ?, ?);');
+        $stmt->bindParam(1, $inTitle);
+        $stmt->bindParam(2, $inNewSongFileName["name"]);
+        $stmt->bindParam(3, $inCount);
+        $stmt->bindParam(4, $inArtistId);
+        $stmt->execute();
+        
+        $targetDir = "upload_ogg/";
+        $targetFile = $targetDir . basename($inNewSongFileName["name"]);
+        
+        if (move_uploaded_file($inNewSongFileName['tmp_name'], $targetFile)) {
+            echo "Filen är uppladdad!";
+        } else {
+            echo "Det gick inte att ladda upp filen!";
+        }
+
+
+	}
 	
 	/**
 	*	Funktionen updateSong uppdaterar en befinlig sång i databasen. Om en ny ogg-fil har angivits tar funktionen bort den gamla och 
@@ -138,6 +145,19 @@
 	*	@param $inSongId string Primärnyckeln för sången som skall tas bort
 	*	@param string $inSongFileName Filnamn på ogg-ljudet
 	*/
-    function deleteSong($inDBConnection, $inSongId, $inSongFileName) {}
+    function deleteSong($inDBConnection, $inSongId, $inSongFileName) {
+
+    	$stmt = $inDBConnection->prepare('DELETE FROM tblsong WHERE id=?');
+        $stmt->bindParam(1, $inSongId);
+        $stmt->execute();
+
+        // Hämtar den absoluta platsen och tar bort filen från servern
+        // Källa: http://php.net/realpath
+        $inSongPath = realpath('upload_ogg/' . $inSongFileName);
+         if(file_exists($inSongPath)) {
+            // Ta bort filen
+            unlink($inSongPath);
+        }
+    }
     
 	
