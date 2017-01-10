@@ -28,7 +28,7 @@ school project
 
 ❌ updateSong()
 
-❌ deleteSong()
+✅ deleteSong()
 
 ❌ insertSong()
 
