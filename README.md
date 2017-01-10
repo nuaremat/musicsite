@@ -24,7 +24,7 @@ school project
 ###songFunctions.php
 ✅ printSongForm()
 
-❌ listSongs()
+✅ listSongs()
 
 ❌ updateSong()
 
