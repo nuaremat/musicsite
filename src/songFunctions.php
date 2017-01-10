@@ -10,12 +10,12 @@
 	*/
     function printSongForm($inDBConnection) {
 
-
     	// Hämtar alla artister
     	$artists = $inDBConnection->query('SELECT * FROM tblartist;');
 
     	// Lägger in allt som ska skrivas i en sträng som konkatineras kontinuerligt
-    	$skriv = '<form action="adminSong.php" method="post" id="frmNewUpdateSong" name="frmNewUpdateSong" enctype="multipart/form-data">';
+  		$skriv = '<legend>' . 'New/Edit Song' . '</legend>' . '<span id="jsErrorMsg" class="errorClass"></span>';
+    	$skriv .= '<form action="adminSong.php" method="post" id="frmNewUpdateSong" name="frmNewUpdateSong" enctype="multipart/form-data">';
     	$skriv .= '<input type="hidden" id="hidId" name="hidId" />' . '<input type="hidden" id="hidSoundFileName" name="hidSoundFileName" />';
     	$skriv .= '<label>' . 'Artist' . '<br />' . '<select id="selArtistId" name="selArtistId" title="Artist" autofocus="autofocus">';
     	$skriv .= '<option value="0">Choose Artist</option>';
@@ -30,6 +30,7 @@
             }
         }
         
+        // Fortsätter konkatenera resten av formuläret efter alla artister är inlagda i options
         $skriv .= '</select>' . '</label>' . '<br />' . '<label>' . 'Song' . '<br />';
         $skriv .= '<input type="text" id="txtTitle" name="txtTitle" title="Title"/>';
         $skriv .= '</label>' . '<br />' . '<label>' . 'Sound' . '<br />';
@@ -41,7 +42,6 @@
 
         // Skriver ut hela strängen med en echo
         echo($skriv);
-
     }
 
 	
@@ -52,7 +52,56 @@
 	*
 	*	@param resurce $inDBConnection Databaskoppling
 	*/
-    function listSongs($inDBConnection) {}
+    function listSongs($inDBConnection) {
+
+    	// Hämtar alla sånger
+    	$tunes = $inDBConnection->query('SELECT * FROM tblsong;');
+
+
+    	if ($tunes->rowCount()==0) {
+    		echo('Det finns inga s&aring;nger i databasen!');
+    	} else {
+			while ($record = $tunes->fetch()) {
+				$id = $record['id'];
+				$title = $record['title'];
+                $sound = $record['sound'];
+                $count = $record['count'];
+                $artistid = $record['artistid'];
+                $changedate = $record['changedate'];
+
+                // Samma som för printSongForm så konkateneras allt till en variabel(string) innan det skrivs ut
+                $skriv = '<h3>' . $title . '</h3>' . '<div>' . '<form action="adminSong.php" method="post" name="frmSong">';
+                $skriv .= 'Id: ' . $id . '<br />' . 'Title: ' . $title . '<br />' . 'Sound: ' . $sound . '<br />';
+                $skriv .= 'count: ' . $count . '<br />' . 'Changedate: ' . $changedate . '<br />';
+                $skriv .= '<input type="hidden" name="hidId" value="' . $id . '" />';
+                $skriv .= '<input type="hidden" name="hidArtistId" value="' . $artistid . '" />';
+                $skriv .= '<input type="hidden" name="hidTitle" value="' . $title . '" />';
+                $skriv .= '<input type="hidden" name="hidSoundFileName" value="' . $sound . '" />';
+                $skriv .= '<input type="hidden" name="hidCount" value="' . $count . '" />';
+                $skriv .= '<audio controls="controls">' . '<source src="upload_ogg/' . $sound . '" />';
+                $skriv .= 'Your browser does not support the audio tag!' . '</audio>' . '<br />';
+                $skriv .= '<input type="button" name="btnEdit" value="Edit" />';
+                $skriv .= '<input type="submit" name="btnDelete" value="Delete" />' . '</form>' . '</div>';
+
+				// Skriver ut den aktuella låtens formulär, för att nollställa $skriv nästa iteration
+				echo($skriv);
+			}
+
+    	}
+
+    	
+    	
+/*
+<fieldset>
+        <legend>New/Edit Song</legend>
+
+        <span id="jsErrorMsg" class="errorClass"></span>
+
+        <?php printSongForm($db); ?>
+
+    </fieldset>
+*/
+    }
 	
 	/**
 	*	Funktionen insertSong sparar en ny sång till databasen samt anropar validateAndMoveUploadedFile() för att flytta den 
