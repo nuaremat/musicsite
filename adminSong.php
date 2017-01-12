@@ -29,9 +29,8 @@
             if (isset($_POST['btnSave'])) {
                 
                 if(empty($_FILES) && empty($_POST) && isset($_SERVER["REQUEST_METHOD"]) && ($_SERVER["REQUEST_METHOD"] == "POST")) {
-                throw new Exception("Du försöke skicka för mycket data.<br />\n'max_post_size' är idag satt till ".ini_get("post_max_size"));
+                    throw new Exception("Du försöke skicka för mycket data.<br />\n'max_post_size' är idag satt till ".ini_get("post_max_size"));
                 }
-
 
                 $stmt = $db->prepare('SELECT * FROM tblsong WHERE id=?;');
                 $stmt->bindParam(1, $_POST['hidId']);
@@ -39,8 +38,7 @@
                 
                 if($stmt->rowCount() == 0) {
                     // Kör insertSong om sång ID inte finns
-                    insertSong($db, $_POST['selArtistId'], $_POST['txtCount'], $_POST['txtTitle'], $_FILES['fileSoundFileName']);
-                    
+                    insertSong($db, $_POST['selArtistId'], $_POST['txtCount'], $_POST['txtTitle'], $_FILES['fileSoundFileName']); 
                 } else {
                     // Kör updateSong om sång ID redan finns
                     $record = $stmt->fetch();
@@ -48,19 +46,13 @@
                     // $_FILES får 2 parametrar här för att komma åt namnet
                     updateSong($db, $_POST['hidId'], $_POST['selArtistId'], $_POST['txtCount'], $_POST['txtTitle'], $_FILES['fileSoundFileName']['name'], $oldName);
                 }
-                
             } 
             elseif (isset($_POST['btnDelete'])) {
                 
-               /* $stmt = $db->prepare('SELECT * FROM tblsong WHERE id=?;');
-                $stmt->bindParam(1, $_POST['hidId']);
-                $stmt->execute();
-*/
                 $hidId = $_POST['hidId'];
                 $hidSoundFileName = $_POST['hidSoundFileName'];
-                
+                // Anropar funktionen för att ta bort vald låt
                 deleteSong($db, $hidId, $hidSoundFileName);
-                
             } 
         ?>
 
