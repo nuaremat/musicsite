@@ -33,12 +33,12 @@ school project
 ✅ insertSong()
 
 ###searchFunctions.php
-❌ printSearchForm()
+✅ printSearchForm()
 
-❌ listArtists()
+✅ listArtists()
 
-❌ listSongs()
+✅ listSongs()
 
-❌ printCommentForm()
+✅ printCommentForm()
 
-❌ listComments()
+✅ listComments()
