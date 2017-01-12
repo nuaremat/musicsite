@@ -26,11 +26,11 @@ school project
 
 ✅ listSongs()
 
-❌ updateSong()
+✅ updateSong()
 
 ✅ deleteSong()
 
-❌ insertSong()
+✅ insertSong()
 
 ###searchFunctions.php
 ❌ printSearchForm()
