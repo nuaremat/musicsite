@@ -8,6 +8,7 @@
 	
 	include("incl/header.php");
     include("src/songFunctions.php");
+    include("src/uploadFunctions.php");
 	
 ?>
 <div id="content">

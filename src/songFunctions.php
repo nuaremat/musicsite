@@ -102,25 +102,20 @@
 	function insertSong($inDBConnection, $inArtistId, $inCount, $inTitle, $inNewSongFileName) {
 
 
-
-
-		$stmt = $inDBConnection->prepare('INSERT INTO tblsong(title, sound, count, artistid) VALUES(?, ?, ?, ?);');
-        $stmt->bindParam(1, $inTitle);
-        $stmt->bindParam(2, $inNewSongFileName["name"]);
-        $stmt->bindParam(3, $inCount);
-        $stmt->bindParam(4, $inArtistId);
-        $stmt->execute();
-        
-        $targetDir = "upload_ogg/";
-        $targetFile = $targetDir . basename($inNewSongFileName["name"]);
-        
-        if (move_uploaded_file($inNewSongFileName['tmp_name'], $targetFile)) {
-            echo "Filen är uppladdad!";
-        } else {
-            echo "Det gick inte att ladda upp filen!";
+        try{
+            // Validerar filen och lägger den i rätt underkatalog
+    		validateAndMoveUploadedFile('ogg');
+            // Om det inte kastas fel (dvs filen är nu korrekt) så läggs den till databasen
+            $stmt = $inDBConnection->prepare('INSERT INTO tblsong(title, sound, count, artistid) VALUES(?, ?, ?, ?);');
+            $stmt->bindParam(1, $inTitle);
+            $stmt->bindParam(2, $inNewSongFileName["name"]);
+            $stmt->bindParam(3, $inCount);
+            $stmt->bindParam(4, $inArtistId);
+            $stmt->execute();
+        }catch(Exception $e){
+            // Kastat fel med felmeddelande tas emot och skrivs ut
+            echo 'Gick ej att ladda up l&aring;t: ' . $e->getMessage();
         }
-
-
 	}
 	
 	/**

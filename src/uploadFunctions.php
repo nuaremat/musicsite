@@ -32,10 +32,11 @@
 		//När ni använder funktionen första gången skall ni kontrollera så att PATH konstanten blir korrekt!
 		if(strtoupper(substr(PHP_OS, 0, 3)) == "WIN") {
 			//WAMP
-			define("PATH", $_SERVER["DOCUMENT_ROOT"]."ISGB24/upload_".$inFileExtension."/");
+			define("PATH", $_SERVER["DOCUMENT_ROOT"]."/musicsite/musicsite/upload_".$inFileExtension."/");
 		}
 		else {	
 			//XAMP
+			// OLLE HÄR LANDAR DET NOG PÅ DIN MAC SÅ FIXA TILL RÄTT FILVÄG FÖR DIG OCH TA BORT MIN KOMMENTAR :D
 			define("PATH", $_SERVER["DOCUMENT_ROOT"]."/ISGB24/upload_".$inFileExtension."/");
 		}
 		
