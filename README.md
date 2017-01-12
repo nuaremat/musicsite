@@ -48,3 +48,7 @@ school project
 ❌ likesong.php
 
 ❌ savecomment.php
+
+###Admin
+
+❌loginFunction.php
