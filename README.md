@@ -42,3 +42,9 @@ school project
 ✅ printCommentForm()
 
 ✅ listComments()
+
+###AJAX
+
+❌ likesong.php
+
+❌ savecomment.php
