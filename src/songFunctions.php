@@ -56,7 +56,6 @@
     	// Hämtar alla sånger
     	$tunes = $inDBConnection->query('SELECT * FROM tblsong;');
 
-
     	if ($tunes->rowCount()==0) {
     		echo('Det finns inga s&aring;nger i databasen!');
     	} else {
@@ -101,7 +100,6 @@
 	*/
 	function insertSong($inDBConnection, $inArtistId, $inCount, $inTitle, $inNewSongFileName) {
 
-
         try{
             // Validerar filen och lägger den i rätt underkatalog
     		validateAndMoveUploadedFile('ogg');
@@ -130,7 +128,29 @@
 	*	@param string $inNewSongFileName Filnamn på det nya ogg-ljudet
 	*	@param string $inOldSongFileName Filnamn på det gamla ogg-ljudet
 	*/
-    function updateSong($inDBConnection, $inSongId, $inArtistId, $inCount, $inTitle, $inNewSongFileName, $inOldSongFileName) {}
+    function updateSong($inDBConnection, $inSongId, $inArtistId, $inCount, $inTitle, $inNewSongFileName, $inOldSongFileName) {
+
+        try{
+            // Validerar filen och lägger den i rätt underkatalog
+            validateAndMoveUploadedFile('ogg');
+            // Om det inte kastas fel (dvs filen är nu korrekt) så uppdateras databasen med ny fil
+            $stmt = $inDBConnection->prepare('UPDATE tblsong SET sound = ? WHERE id = ?');
+            $stmt->bindParam(1, $inNewSongFileName);
+            $stmt->bindParam(2, $inSongId);
+            $stmt->execute();
+
+            // Hämtar den absoluta platsen till gamla filen
+            // Källa: http://php.net/realpath
+            $inSongPath = realpath('upload_ogg/' . $inOldSongFileName);
+            if(file_exists($inSongPath)) {
+                // Ta bort gamla filen om den finns
+                unlink($inSongPath);
+            }
+
+        }catch(Exception $e){
+            echo 'Gick ej att uppdatera l&aring;t: ' . $e->getMessage();
+        }
+    }
 	
 	/**
 	*	Funktionen deleteSong tar bort en befinlig song från databasen. Därtill tar funktionen bort den ogg-fil som sången är knuten mot. 
@@ -141,18 +161,18 @@
 	*	@param string $inSongFileName Filnamn på ogg-ljudet
 	*/
     function deleteSong($inDBConnection, $inSongId, $inSongFileName) {
-
-    	$stmt = $inDBConnection->prepare('DELETE FROM tblsong WHERE id=?');
+       
+        $stmt = $inDBConnection->prepare('DELETE FROM tblsong WHERE id=?');
         $stmt->bindParam(1, $inSongId);
         $stmt->execute();
 
-        // Hämtar den absoluta platsen och tar bort filen från servern
+        // Hämtar den absoluta platsen till filen
         // Källa: http://php.net/realpath
         $inSongPath = realpath('upload_ogg/' . $inSongFileName);
-         if(file_exists($inSongPath)) {
-            // Ta bort filen
+        if(file_exists($inSongPath)) {
+            // Ta bort filen om den finns
             unlink($inSongPath);
-        }
+        } 
     }
     
 	
