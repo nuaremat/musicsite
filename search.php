@@ -17,12 +17,12 @@
 
     <!-- Hårdkodad HTML5 för utsökning av song -->
     		
-  <?php 
-                if (isset($_POST['btnSearch'])){
-                    listSongs($db, $_POST['txtSearch']);
-                    listArtists($db, $_POST['txtSearch']); 
-                }
-            ?>
+    <?php 
+        if (isset($_POST['btnSearch'])){
+            listSongs($db, $_POST['txtSearch']);
+            listArtists($db, $_POST['txtSearch']); 
+        }
+    ?>
 
 </div>
 
