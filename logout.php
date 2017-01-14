@@ -1,15 +1,24 @@
 <?php
-	$title="Logout";
-	include("incl/header.php");
+    $title="Logout";
+
+    include("src/loginFunctions.php");
+
+    if (checkSession()) {
+        endSession();
+    } else {
+        header("Location: login.php");
+        exit();
+    }
+
+    include("incl/header.php");
+    
 ?>
 
-				<div id="content">
-					
-					<h1> You are no longer logged on!</h1>
-					<hr />
+<div id="content">
 
-                </div>
+    <h1> You are no longer logged on!</h1>
+    <hr />
 
-<?php 
-	include("incl/footer.php");
-?>
+</div>
+
+<?php include("incl/footer.php"); ?>

@@ -28,7 +28,7 @@
 	function startSession() {
         session_start();
         session_regenerate_id(true);
-        $_SESSION["username"] = $_POST["username"];
+        $_SESSION["txtUserName"] = $_POST["txtUserName"];
         $_SESSION["datetime"] = date("Y-m-d H:i:s");
         $_SESSION["online"] = true;
     }
@@ -41,14 +41,14 @@
         session_unset();
 
         if (ini_get("session.use_cookies")) {
-        $data = session_get_cookie_params();
+            $data = session_get_cookie_params();
 
-        $path = $data["path"];
-        $domain = $data["domain"];
-        $secure = $data["secure"];
-        $httponly = $data["httponly"];
+            $path = $data["path"];
+            $domain = $data["domain"];
+            $secure = $data["secure"];
+            $httponly = $data["httponly"];
 
-        setcookie(session_name(), "", time() - 3600, $path, $domain, $secure, $httponly);
+            setcookie(session_name(), "", time() - 3600, $path, $domain, $secure, $httponly);
         }
 
         session_destroy();
@@ -66,10 +66,10 @@
         $online = false;
 
         if (isset($_SESSION["online"])) {
-        $online = true;
-        session_regenerate_id(true);
+            $online = true;
+            session_regenerate_id(true);
         } else {
-        endSession();
+            endSession();
         }
 
         return $online;

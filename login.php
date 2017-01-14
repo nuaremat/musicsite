@@ -1,30 +1,29 @@
 <?php  
+    $title="Login";
 
-$title="Login";
-include("incl/header.php");
-include("src/loginFunctions.php");
+    ini_set("display_errors", 1);
+    include('src/databaseFunctions.php');
+    include('src/loginFunctions.php');
+    // Om man trycker på "Login"-knappen i login.php
+    if (isset($_POST["btnLogin"])) {
+        try {
+            $db = myDBConnect();
+            // kollar om användaren finns och om lösenordet är rätt
+            // Måste connecta med databasen innan, men include header skriver ut html så då fungerar inte startSession()
+            if (validateUser($db, $_POST["txtUserName"], $_POST["txtPassWord"]) === 1) {
+                startSession();
+                header("Location: adminArtist.php");
+                exit();
+            } else {
+                throw new Exception("Felaktigt användarnamn och/eller lösenord!");
+            }
 
-//if (checkSession()) {
-//    header("Location: adminCar.php");
-//    exit();
-//}
-
-if (isset($_POST["btnLogin"])) {
-    try {
-        $test = validateUser($db, $_POST["txtUserName"], $_POST["txtPassWord"]);
-        echo ('Rader: ' . $test);
-//        if (validateUser($db, $_POST["username"], $_POST["password"]) === 1) {
-//            startSession();
-//            header("Location: adminArtist.php");
-//            exit();
-//        } else {
-//            throw new Exception("Felaktigt användarnamn och/eller lösenord!");
-//        }
-    } catch(Exception $e) {
-      $error = $e->getMessage();
+        } catch (Exception $e) {
+            $error = 'Error connecting to DB: ' . $e->getMessage();
+        }
     }
-}
 
+    include("incl/header.php");
 ?>
 
 <div id="content">
@@ -32,11 +31,9 @@ if (isset($_POST["btnLogin"])) {
     <h1><?php echo($title); ?></h1>
     <hr />
 
-    <?php ?>
-
     <fieldset>
-      <legend>Type username and password</legend>
-       <form action="login.php" method="post" name="frmLogin" >
+        <legend>Type username and password</legend>
+        <form action="login.php" method="post" name="frmLogin" >
             <label>
                 Name
                 <br />
@@ -51,8 +48,13 @@ if (isset($_POST["btnLogin"])) {
             <br />
             <input type="submit" name="btnLogin" id="btnLogin" value="Login" />
             <input type="reset" name="btnReset" id="btnReset" value="Reset" />
-      </form>
+        </form>
+        <?php
+            if(isset($error)) {
+                echo $error;
+            }
+        ?>
     </fieldset>
 </div>
 
-<?php include("incl/footer.php");
+<?php include("incl/footer.php"); ?>
