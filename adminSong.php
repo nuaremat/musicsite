@@ -4,7 +4,7 @@
 	$title="Admin song";
 	$accordion = TRUE;
 	$jquery = TRUE;
-//	$admin = "secretpage";
+	$admin = "secretpage";
 	
     include('src/databaseFunctions.php');
 

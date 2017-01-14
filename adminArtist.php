@@ -5,7 +5,7 @@
 	$accordion = TRUE;
 	$jquery = TRUE;
     $slimbox = TRUE;
-	//$admin = "secretpage";
+	$admin = "secretpage";
 
     include('src/databaseFunctions.php');
 

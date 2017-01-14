@@ -2,14 +2,14 @@
 					<nav>
 						<ul>
 							<?php 
-								//if(isset($admin) && ($admin == "secretpage"))
-								//{
+								if(isset($admin) && ($admin == "secretpage"))
+								{
 									include("incl/adminmenu.php"); 
-								//}
-								//else
-								//{
+								}
+								else
+								{
 									include("incl/mainmenu.php");
-								//}
+								}
 							?>
 						</ul>
 					</nav>
@@ -26,10 +26,7 @@
 			<?php
 				if(isset($jquery)) {
 				?>
-					<script type="text/javascript" src="jquery/jquery-3.1.1.js">
-						//20150914 2.1.1 -> 2.1.4
-						//20161019 2.1.4 -> 3.1.1
-					</script>
+					<script type="text/javascript" src="jquery/jquery-3.1.1.js"></script>
 				<?php
 				}
 				

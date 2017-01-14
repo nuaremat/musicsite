@@ -4,6 +4,12 @@
     ini_set("display_errors", 1);
     include('src/databaseFunctions.php');
     include('src/loginFunctions.php');
+    
+    if (checkSession()) {
+        header("Location: adminArtist.php");
+        exit();
+    }
+
     // Om man trycker på "Login"-knappen i login.php
     if (isset($_POST["btnLogin"])) {
         try {
