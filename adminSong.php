@@ -6,6 +6,15 @@
 	$jquery = TRUE;
 //	$admin = "secretpage";
 	
+    include('src/databaseFunctions.php');
+
+    try {
+        $db = myDBConnect();
+    } catch (Exception $e) {
+        // variabel som används för att skriva ut errormeddelande på sidan
+        $error = 'Error connecting to DB: ' . $e->getMessage();
+    }
+    
 	include("incl/header.php");
     include("src/songFunctions.php");
     include("src/uploadFunctions.php");
