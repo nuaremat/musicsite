@@ -34,36 +34,41 @@
 	*	@param resurce $dbConnection Databaskoppling
 	*/
 	function listArtists($dbConnection) {
-        // Kod för att lista kommentarer ur databasen här
-        $artists = $dbConnection->query('SELECT * FROM tblartist;');
+        
+        try{
+            // Kod för att lista kommentarer ur databasen här
+            $artists = $dbConnection->query('SELECT * FROM tblartist;');
 
-        // Kollar om det finns några rader i tabellen
-        if ($artists->rowCount() == 0) {
-            echo ('Det finns inga artister i databasen!');
-        } else {
-            while ($record = $artists->fetch()) {
-                $id = $record['id'];
-                $name = $record['name'];
-                $picture = $record['picture'];
-                $changedate = $record['changedate'];
+            // Kollar om det finns några rader i tabellen
+            if ($artists->rowCount() == 0) {
+                echo ('Det finns inga artister i databasen!');
+            } else {
+                while ($record = $artists->fetch()) {
+                    $id = $record['id'];
+                    $name = $record['name'];
+                    $picture = $record['picture'];
+                    $changedate = $record['changedate'];
 
-                echo ('<h3>' . $name . '</h3>');
-                echo ('<div><form action="adminArtist.php" method="post" name="frmArtist">');
-                echo ('id: ' . $id . '<br />');
-                echo ('name: ' . $name . '<br />');
-                echo ('picture: ' . $picture . '<br />');
-                echo ('changedate: ' . $changedate . '<br />');
-                echo ('<a href="upload_jpg/' . $picture . '" rel="lightbox"><img src="upload_jpg/' . $picture . '" alt="' . $picture . '" class="imgAnimation" rel="lightbox" /></a><br />');
-                echo ('<input type="button" name="btnEdit" value="Edit" >');
-                echo ('<input type="submit" name="btnDelete" value="Delete" />');
-                // hidden id
-                echo ('<input type="hidden" name="hidId" value="' . $id . '" />');
-                // hidden picture filename
-                echo ('<input type="hidden" name="hidPictureFileName" value="' . $picture . '" />');
-                // hidden artist name
-                echo ('<input type="hidden" name="hidArtist" value="' . $name . '" />');
-                echo ('</form></div>');
+                    echo ('<h3>' . $name . '</h3>');
+                    echo ('<div><form action="adminArtist.php" method="post" name="frmArtist">');
+                    echo ('id: ' . $id . '<br />');
+                    echo ('name: ' . $name . '<br />');
+                    echo ('picture: ' . $picture . '<br />');
+                    echo ('changedate: ' . $changedate . '<br />');
+                    echo ('<a href="upload_jpg/' . $picture . '" rel="lightbox"><img src="upload_jpg/' . $picture . '" alt="' . $picture . '" class="imgAnimation" rel="lightbox" /></a><br />');
+                    echo ('<input type="button" name="btnEdit" value="Edit" >');
+                    echo ('<input type="submit" name="btnDelete" value="Delete" />');
+                    // hidden id
+                    echo ('<input type="hidden" name="hidId" value="' . $id . '" />');
+                    // hidden picture filename
+                    echo ('<input type="hidden" name="hidPictureFileName" value="' . $picture . '" />');
+                    // hidden artist name
+                    echo ('<input type="hidden" name="hidArtist" value="' . $name . '" />');
+                    echo ('</form></div>');
+                }
             }
+        }catch(Exception $e){
+            echo 'Kunde inte visa artister: ' . $e->getMessage();
         }
     }
 	
@@ -81,18 +86,16 @@
 
     function insertArtist($dbConnection, $inArtist, $inNewPictureFileName) {
         
-        $stmt = $dbConnection->prepare('INSERT INTO tblartist(name, picture) VALUES(?, ?);');
-        $stmt->bindParam(1, $inArtist);
-        $stmt->bindParam(2, $inNewPictureFileName["name"]);
-        $stmt->execute();
-        
-        $targetDir = "upload_jpg/";
-        $targetFile = $targetDir . basename($inNewPictureFileName["name"]);
-        
-        if (move_uploaded_file($inNewPictureFileName['tmp_name'], $targetFile)) {
-            echo "Filen är uppladdad!";
-        } else {
-            echo "Det gick inte att ladda upp filen!";
+        try{
+             // Validerar filen och lägger den i rätt underkatalog
+            validateAndMoveUploadedFile('jpg');
+            // Om det inte kastas fel (dvs filen är nu korrekt) så läggs den till databasen
+            $stmt = $dbConnection->prepare('INSERT INTO tblartist(name, picture) VALUES(?, ?);');
+            $stmt->bindParam(1, $inArtist);
+            $stmt->bindParam(2, $inNewPictureFileName["name"]);
+            $stmt->execute();
+        }catch(Exception $e){
+            echo 'Gick ej att ladda upp artist: ' . $e->getMessage();
         }
     }
 	
@@ -108,10 +111,26 @@
 	*	@param string $inOldPictureFileName	Filnamn på den gamla jpg-bilden
 	*/
 	function updateArtist($dbConnection, $inArtistId, $inArtist, $inNewPictureFileName, $inOldPictureFileName) {
-        $stmt = $dbConnection->prepare('UPDATE tblartist SET picture=? WHERE id=?;');
-        $stmt->bindParam(1, $inNewPictureFileName);
-        $stmt->bindParam(2, $inArtistId);
-        $stmt->execute();
+        
+        try{
+             // Validerar filen och lägger den i rätt underkatalog
+            validateAndMoveUploadedFile('jpg');
+            // Om det inte kastas fel (dvs filen är nu korrekt) så uppdateras databasen med ny fil
+            $stmt = $dbConnection->prepare('UPDATE tblartist SET picture = ? WHERE id = ?;');
+            $stmt->bindParam(1, $inNewPictureFileName);
+            $stmt->bindParam(2, $inArtistId);
+            $stmt->execute();
+
+            // Hämtar den absoluta platsen till gamla filen
+            // Källa: http://php.net/realpath
+            $inPicturePath = realpath('upload_jpg/' . $inOldPictureFileName);
+            if(file_exists($inPicturePath)) {
+                // Ta bort gamla filen om den finns
+                unlink($inPicturePath);
+            }
+        }catch(Exception $e){
+            echo 'Gick inte att uppdatera artist: ' . $e->getMessage();
+        }
     }
 	
 	/**
@@ -124,19 +143,24 @@
 	*	@param string $inPictureFileName Filnamn på jpg-bilden
 	*/
     function deleteArtist($dbConnection, $inArtistId, $inPictureFileName) {
-        /* Ta bort raden i databasen */
-        $stmt = $dbConnection->prepare('DELETE FROM tblartist WHERE id=?');
-        $stmt->bindParam(1, $inArtistId);
-        $stmt->execute();
         
-        /* Ta bort bildfilen */
-        // Sökväg till bildfilen
-        $inPicturePath = 'upload_jpg/' . $inPictureFileName;
-        
-        // Kolla om filen finns
-        if(file_exists($inPicturePath)) {
-            // Ta bort filen
-            unlink($inPicturePath);
+        try{
+            /* Ta bort raden i databasen */
+            $stmt = $dbConnection->prepare('DELETE FROM tblartist WHERE id = ?');
+            $stmt->bindParam(1, $inArtistId);
+            $stmt->execute();
+            
+            /* Ta bort bildfilen */
+            // Sökväg till bildfilen
+            $inPicturePath = realpath('upload_jpg/' . $inPictureFileName);
+            
+            // Kolla om filen finns
+            if(file_exists($inPicturePath)) {
+                // Ta bort filen
+                unlink($inPicturePath);
+            }
+        }catch(Exception $e){
+            echo 'Kunde inte ta bort artist: ' . $e->getMessage();
         }
     }
     

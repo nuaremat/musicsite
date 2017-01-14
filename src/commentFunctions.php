@@ -10,34 +10,37 @@
 	*/
     function listComments($inDBConnection){
         
-        // Kod för att lista kommentarer ur databasen här
-        $comments = $inDBConnection->query('SELECT * FROM tblcomment;');
+        try{
+            // Kod för att lista kommentarer ur databasen här
+            $comments = $inDBConnection->query('SELECT text, tblcomment.id, songid, title FROM tblcomment, tblsong WHERE tblcomment.songid = tblsong.id GROUP BY tblcomment.id');
 
-        // Kollar om det finns några rader i tabellen
-        if ($comments->rowCount() == 0) {
-            echo ('Det finns inga kommentarer i databasen!');
-        } else {
-            while ($record = $comments->fetch()) {
-                $id = $record['id'];
-                $songid = $record['songid'];
-                $text = $record['text'];
-                $insertdate = $record['insertdate'];
+            // Kollar om det finns några rader i tabellen
+            if ($comments->rowCount() == 0) {
+                echo ('Det finns inga kommentarer i databasen!');
+            } else {
+                while ($record = $comments->fetch()) {
+                    $commentid = $record['id'];
+                    $songid = $record['songid'];
+                    $title = $record['title'];
+                    $text = $record['text'];
 
-                echo ('<h3>' . $id . '</h3>');
-                echo ('<div><form action="adminComment.php" method="post" name="frmComment">');
-                echo ('id: ' . $id . '<br />');
-                echo ('songid: ' . $songid . '<br />');
-                echo ('text: ' . $text . '<br />');
-                // hidden id
-                echo ('<input type="hidden" name="hidId" value="' . $id . '" />');
-                // hidden text
-                echo ('<input type="hidden" name="hidText" value="' . $text . '" />');
-                // delete button
-                echo ('<input type="submit" name="btnDelete" value="Delete" />');
-                echo ('</form></div>');
+                    echo ('<h3> L&aring;t: ' . $title . ', CommentID: ' . $commentid . '</h3>');
+                    echo ('<div><form action="adminComment.php" method="post" name="frmComment">');
+                    echo ('id: ' . $commentid . '<br />');
+                    echo ('songid: ' . $songid . '<br />');
+                    echo ('text: ' . $text . '<br />');
+                    // hidden id
+                    echo ('<input type="hidden" name="hidId" value="' . $commentid . '" />');
+                    // hidden text
+                    echo ('<input type="hidden" name="hidText" value="' . $text . '" />');
+                    // delete button
+                    echo ('<input type="submit" name="btnDelete" value="Delete" />');
+                    echo ('</form></div>');
+                }
             }
+        }catch(Exception $e){
+            echo 'Gick ej att lista kommentarer: ' . $e->getMessage();
         }
-        
     }
     
 	/**
@@ -49,9 +52,13 @@
 	*/
 	function deleteComment($inDBConnection, $inCommentId) {
         
-        // Kod för att ta bort klickad kommentar
-        $comments = $inDBConnection->prepare('DELETE FROM tblcomment WHERE id=?;');
-        $comments->bindParam(1, $inCommentId);
-        $comments->execute();
+        try{
+            // Kod för att ta bort klickad kommentar
+            $comments = $inDBConnection->prepare('DELETE FROM tblcomment WHERE id=?;');
+            $comments->bindParam(1, $inCommentId);
+            $comments->execute();
+        }catch(Exception $e){
+            echo 'Kan inte ta bort kommentar: ' . $e.getMessage();
+        }
         
     }

@@ -66,38 +66,42 @@
 	*/
 	function listSongs($inDBConnection, $inSearchString) {
 
-		// Kod för att lista sånger ur databasen, fungerar på samma sätt som listArtists
-        $tunes = $inDBConnection->query('SELECT * FROM tblsong WHERE title LIKE "' . $inSearchString . '%";');
-        // Start av låtutsökning
-		echo '<fieldset><legend>Searchresult Song</legend>';
-         // Kollar om det finns några rader i tabellen
-        if ($tunes->rowCount() == 0) {
-            echo ('Inga l&aring;tar matchar din s&ouml;kning!');
-        } else {
-            while ($record = $tunes->fetch()) {
-                $id = $record['id'];
-                $title = $record['title'];
-                $sound = $record['sound'];
-                $count = $record['count'];
-                $artistid = $record['artistid'];
-                $changedate = $record['changedate'];
+		try{
+			// Kod för att lista sånger ur databasen, fungerar på samma sätt som listArtists
+	        $tunes = $inDBConnection->query('SELECT * FROM tblsong WHERE title LIKE "' . $inSearchString . '%";');
+	        // Start av låtutsökning
+			echo '<fieldset><legend>Searchresult Song</legend>';
+	         // Kollar om det finns några rader i tabellen
+	        if ($tunes->rowCount() == 0) {
+	            echo ('Inga l&aring;tar matchar din s&ouml;kning!');
+	        } else {
+	            while ($record = $tunes->fetch()) {
+	                $id = $record['id'];
+	                $title = $record['title'];
+	                $sound = $record['sound'];
+	                $count = $record['count'];
+	                $artistid = $record['artistid'];
+	                $changedate = $record['changedate'];
 
-                // Hade hellre använt konkatenering, men när listComments inte får returnera data och måste annvändas blir det ej ko.
-				echo '<span class="toggle-button"> Show all comments</span>';
-        		echo ('<div data-comments="comments" data-id="' . $id . '" class="toggle-result">');
-                listComments($inDBConnection, $id);
-                echo '</div>'; 
-                printCommentForm($id, $sound);
-                echo ('<a href="#" data-id="' . $id . '" class="like-button">Like ' . $title . '</a>');
-                echo ('<p>Title: ' . $title . '<br />Song: ' . $sound . '<br />');
-                echo ('Count: <span data-id="' . $id . '">' . $count . '</span><br />');
-                echo ('<audio controls="controls"><source src="upload_ogg/' . $sound . '" />');
-                echo ('Din webbl&auml;sare st&ouml;djer inte audio-taggen!</audio><br /></p><hr />');
-            }
-            
+	                // Hade hellre använt konkatenering, men när listComments inte får returnera data och måste annvändas blir det ej ko.
+					echo '<span class="toggle-button"> Show all comments</span>';
+	        		echo ('<div data-comments="comments" data-id="' . $id . '" class="toggle-result">');
+	                listComments($inDBConnection, $id);
+	                echo '</div>'; 
+	                printCommentForm($id, $sound);
+	                echo ('<a href="#" data-id="' . $id . '" class="like-button">Like ' . $title . '</a>');
+	                echo ('<p>Title: ' . $title . '<br />Song: ' . $sound . '<br />');
+	                echo ('Count: <span data-id="' . $id . '">' . $count . '</span><br />');
+	                echo ('<audio controls="controls"><source src="upload_ogg/' . $sound . '" />');
+	                echo ('Din webbl&auml;sare st&ouml;djer inte audio-taggen!</audio><br /></p><hr />');
+	            }
+	            
+	        }
+	        // Slut av låtutsökning
+	        echo '</fieldset>';
+        }catch(Exception $e){
+        	echo 'Kunde inte visa l&aring;tar: ' . $e->getMessage();
         }
-        // Slut av låtutsökning
-        echo '</fieldset>';
 	}
     
     /**
@@ -109,14 +113,20 @@
 	*/
 	function listComments($inDBConnection, $inSongId){
 
-		$comments = $inDBConnection->query('SELECT * FROM tblcomment WHERE songid = "' . $inSongId . '"');
-		if ($comments->rowCount() == 0) {
-            echo ('Inga kommentarer att visa, fyll p&aring; med dina &aring;sikter!');
-        } else {
-            while ($record = $comments->fetch()){
-            	// Skriver ut kommentarer tills alla är utskrivna
-				echo ('<p> <b>' . $record['insertdate'] . ':</b> <i>' . $record['text'] . '</i> </p>');
+		try{
+			$comments = $inDBConnection->query('SELECT * FROM tblcomment WHERE songid = "' . $inSongId . '"');
+			if ($comments->rowCount() == 0) {
+	            echo ('Inga kommentarer att visa, fyll p&aring; med dina &aring;sikter!');
+	        } else {
+	        	$skriv = '';
+	            while ($record = $comments->fetch()){
+	            	// Sparar varje ny iteration "överst" i en sträng för att få nyast först när kommentarer listas
+					$skriv = '<p> <b>' . $record['insertdate'] . ':</b> <i>' . $record['text'] . '</i> </p>' . $skriv;
+				}
+				echo($skriv);
 			}
+		}catch(Exception $e){
+			echo 'Kunde inte lista kommentarer: ' . $e->getMessage();
 		}
 	}
 	

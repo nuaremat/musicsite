@@ -53,38 +53,42 @@
 	*/
     function listSongs($inDBConnection) {
 
-    	// Hämtar alla sånger
-    	$tunes = $inDBConnection->query('SELECT * FROM tblsong;');
+        try{
+        	// Hämtar alla sånger
+        	$tunes = $inDBConnection->query('SELECT * FROM tblsong;');
 
-    	if ($tunes->rowCount()==0) {
-    		echo('Det finns inga s&aring;nger i databasen!');
-    	} else {
-			while ($record = $tunes->fetch()) {
-				$id = $record['id'];
-				$title = $record['title'];
-                $sound = $record['sound'];
-                $count = $record['count'];
-                $artistid = $record['artistid'];
-                $changedate = $record['changedate'];
+        	if ($tunes->rowCount()==0) {
+        		echo('Det finns inga s&aring;nger i databasen!');
+        	} else {
+    			while ($record = $tunes->fetch()) {
+    				$id = $record['id'];
+    				$title = $record['title'];
+                    $sound = $record['sound'];
+                    $count = $record['count'];
+                    $artistid = $record['artistid'];
+                    $changedate = $record['changedate'];
 
-                // Samma som för printSongForm så konkateneras allt till en variabel(string) innan det skrivs ut
-                $skriv = '<h3>' . $title . '</h3>' . '<div>' . '<form action="adminSong.php" method="post" name="frmSong">';
-                $skriv .= 'Id: ' . $id . '<br />' . 'Title: ' . $title . '<br />' . 'Sound: ' . $sound . '<br />';
-                $skriv .= 'count: ' . $count . '<br />' . 'Changedate: ' . $changedate . '<br />';
-                $skriv .= '<input type="hidden" name="hidId" value="' . $id . '" />';
-                $skriv .= '<input type="hidden" name="hidArtistId" value="' . $artistid . '" />';
-                $skriv .= '<input type="hidden" name="hidTitle" value="' . $title . '" />';
-                $skriv .= '<input type="hidden" name="hidSoundFileName" value="' . $sound . '" />';
-                $skriv .= '<input type="hidden" name="hidCount" value="' . $count . '" />';
-                $skriv .= '<audio controls="controls">' . '<source src="upload_ogg/' . $sound . '" />';
-                $skriv .= 'Your browser does not support the audio tag!' . '</audio>' . '<br />';
-                $skriv .= '<input type="button" name="btnEdit" value="Edit" />';
-                $skriv .= '<input type="submit" name="btnDelete" value="Delete" />' . '</form>' . '</div>';
+                    // Samma som för printSongForm så konkateneras allt till en variabel(string) innan det skrivs ut
+                    $skriv = '<h3>' . $title . '</h3>' . '<div>' . '<form action="adminSong.php" method="post" name="frmSong">';
+                    $skriv .= 'Id: ' . $id . '<br />' . 'Title: ' . $title . '<br />' . 'Sound: ' . $sound . '<br />';
+                    $skriv .= 'count: ' . $count . '<br />' . 'Changedate: ' . $changedate . '<br />';
+                    $skriv .= '<input type="hidden" name="hidId" value="' . $id . '" />';
+                    $skriv .= '<input type="hidden" name="hidArtistId" value="' . $artistid . '" />';
+                    $skriv .= '<input type="hidden" name="hidTitle" value="' . $title . '" />';
+                    $skriv .= '<input type="hidden" name="hidSoundFileName" value="' . $sound . '" />';
+                    $skriv .= '<input type="hidden" name="hidCount" value="' . $count . '" />';
+                    $skriv .= '<audio controls="controls">' . '<source src="upload_ogg/' . $sound . '" />';
+                    $skriv .= 'Your browser does not support the audio tag!' . '</audio>' . '<br />';
+                    $skriv .= '<input type="button" name="btnEdit" value="Edit" />';
+                    $skriv .= '<input type="submit" name="btnDelete" value="Delete" />' . '</form>' . '</div>';
 
-				// Skriver ut den aktuella låtens formulär, för att nollställa $skriv nästa iteration
-				echo($skriv);
-			}
-    	}
+    				// Skriver ut den aktuella låtens formulär, för att nollställa $skriv nästa iteration
+    				echo($skriv);
+    			}
+        	}
+        }catch(Exception $e){
+            echo 'Gick ej att lista songs: ' . $e->getMessage();
+        }
     }
 	
 	/**
@@ -134,7 +138,7 @@
             // Validerar filen och lägger den i rätt underkatalog
             validateAndMoveUploadedFile('ogg');
             // Om det inte kastas fel (dvs filen är nu korrekt) så uppdateras databasen med ny fil
-            $stmt = $inDBConnection->prepare('UPDATE tblsong SET sound = ? WHERE id = ?');
+            $stmt = $inDBConnection->prepare('UPDATE tblsong SET sound = ? WHERE id = ?;');
             $stmt->bindParam(1, $inNewSongFileName);
             $stmt->bindParam(2, $inSongId);
             $stmt->execute();
@@ -146,7 +150,6 @@
                 // Ta bort gamla filen om den finns
                 unlink($inSongPath);
             }
-
         }catch(Exception $e){
             echo 'Gick ej att uppdatera l&aring;t: ' . $e->getMessage();
         }
@@ -162,17 +165,22 @@
 	*/
     function deleteSong($inDBConnection, $inSongId, $inSongFileName) {
        
-        $stmt = $inDBConnection->prepare('DELETE FROM tblsong WHERE id=?');
-        $stmt->bindParam(1, $inSongId);
-        $stmt->execute();
+        try{
+            // Tar bort filen från databasen
+            $stmt = $inDBConnection->prepare('DELETE FROM tblsong WHERE id = ?;');
+            $stmt->bindParam(1, $inSongId);
+            $stmt->execute();
 
-        // Hämtar den absoluta platsen till filen
-        // Källa: http://php.net/realpath
-        $inSongPath = realpath('upload_ogg/' . $inSongFileName);
-        if(file_exists($inSongPath)) {
-            // Ta bort filen om den finns
-            unlink($inSongPath);
-        } 
+            // Hämtar den absoluta platsen till filen
+            // Källa: http://php.net/realpath
+            $inSongPath = realpath('upload_ogg/' . $inSongFileName);
+            if(file_exists($inSongPath)) {
+                // Ta bort filen om den finns
+                unlink($inSongPath);
+            } 
+        }catch(Exception $e){
+            echo 'Gick ej att ta bort song: ' . $e.getMessage();
+        }
     }
     
 	

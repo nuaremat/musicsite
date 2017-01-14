@@ -32,7 +32,7 @@
                     throw new Exception("Du försöke skicka för mycket data.<br />\n'max_post_size' är idag satt till ".ini_get("post_max_size"));
                 }
 
-                $stmt = $db->prepare('SELECT * FROM tblsong WHERE id=?;');
+                $stmt = $db->prepare('SELECT * FROM tblsong WHERE id = ?;');
                 $stmt->bindParam(1, $_POST['hidId']);
                 $stmt->execute();
                 
@@ -49,10 +49,8 @@
             } 
             elseif (isset($_POST['btnDelete'])) {
                 
-                $hidId = $_POST['hidId'];
-                $hidSoundFileName = $_POST['hidSoundFileName'];
                 // Anropar funktionen för att ta bort vald låt
-                deleteSong($db, $hidId, $hidSoundFileName);
+                deleteSong($db, $_POST['hidId'], $_POST['hidSoundFileName']);
             } 
         ?>
 
