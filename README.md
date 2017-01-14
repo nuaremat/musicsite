@@ -49,4 +49,7 @@ school project
 ✅ savecomment.php
 
 ###Admin
-❌ loginFunction.php
+✅ validateUser()
+❌ startSession()
+❌ endSession()
+❌ checkSession()

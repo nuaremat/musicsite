@@ -10,19 +10,49 @@
 	*
 	*	@return int Antalet rader som matchar sökkriterierna
 	*/
-    function validateUser($inDBConnection, $inUserName, $inPassWord) {}
+    function validateUser($inDBConnection, $inUserName, $inPassWord) {
+        $stmt = $inDBConnection->prepare("SELECT username FROM tbladmin WHERE username = ? AND password = SHA1(?);");
+        $stmt->bindParam(1, $inUserName);
+        $stmt->bindParam(2, $inPassWord);
+        $stmt->execute();
+
+        $count = $stmt->rowCount();
+
+        return $count;
+    }
     
 	/**
 	*	Funktionen startSession() startar upp en session och sparar i denna sparar sessionsvariablerna usernamn och online.
 	*	Funktionen tar inte emot någon data och returnerar heller ingen data.
 	*/
-	function startSession() {}
+	function startSession() {
+        session_start();
+        session_regenerate_id(true);
+        $_SESSION["username"] = $_POST["username"];
+        $_SESSION["datetime"] = date("Y-m-d H:i:s");
+        $_SESSION["online"] = true;
+    }
     
 	/**
 	*	Funktionen endSession() avslutar en befintlig session.
 	*	Funktionen tar inte emot någon data och returnerar heller ingen data.
 	*/
-	function endSession() {}
+	function endSession() {
+        session_unset();
+
+        if (ini_get("session.use_cookies")) {
+        $data = session_get_cookie_params();
+
+        $path = $data["path"];
+        $domain = $data["domain"];
+        $secure = $data["secure"];
+        $httponly = $data["httponly"];
+
+        setcookie(session_name(), "", time() - 3600, $path, $domain, $secure, $httponly);
+        }
+
+        session_destroy();
+    }
     
 	/**
 	*	Funktionen checkSesion() kontrolleras om en session är igång och om så är fallet genererar ett nytt sessionsid och returnerar sant. 
@@ -31,4 +61,18 @@
 	*
 	*	@return boolean Om en användare är påloggad eller inte
 	*/
-	function checkSession() {}
+	function checkSession() {
+        session_start();
+        $online = false;
+
+        if (isset($_SESSION["online"])) {
+        $online = true;
+        session_regenerate_id(true);
+        } else {
+        endSession();
+        }
+
+        return $online;
+    }
+
+?>
