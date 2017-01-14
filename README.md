@@ -15,7 +15,7 @@ school project
 
 ✅ listArtists()
 
-⌛ updateArtist()
+✅ updateArtist()
 
 ✅ deleteArtist()
 
