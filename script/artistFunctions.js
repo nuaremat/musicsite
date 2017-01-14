@@ -5,7 +5,6 @@
 /**
 *   http://api.jqueryui.com/accordion/
 */
-
 $(function () {
     $('#accordion').accordion({
         collapsible: true,

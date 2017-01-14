@@ -12,30 +12,30 @@
 	*	
 	*/
 
-include('src/databaseFunctions.php');
+include('../src/databaseFunctions.php');
 
-//try {
-//    $db = myDBConnect();
-//} catch (Exception $e) {
-//    // Skriv ut error på sidan senare.
-//    $error = 'Error connecting to DB: ' . $e->getMessage();
-//}
+$dataId = $_POST['dataId'];
 
-//$stmt = $db->prepare('UPDATE tblsong SET count = count+1 WHERE id=?;');
-//$stmt->bindParam(1, $_GET[id]);
-//$stmt->execute();
+try {
+    $db = myDBConnect();
+} catch (Exception $e) {
+    // Skriv ut error på sidan senare.
+    $error = 'Error connecting to DB: ' . $e->getMessage();
+}
 
-$stmt = $db->query('SELECT * FROM tblsong;');
-//
-//while ($record = $stmt->fetch()) {
-//    $count = $record['count'];
-//}
-	
-// För test returnerars konstanten 100 i form av JSON: {"gilla" : "100"}.
+$stmt = $db->prepare('UPDATE tblsong SET count = count + 1 WHERE id=?;');
+$stmt->bindParam(1, $dataId);
+$stmt->execute();
+
+$stmt = $db->prepare('SELECT * FROM tblsong WHERE id=?;');
+$stmt->bindParam(1, $dataId);
+$stmt->execute();
+
+while ($record = $stmt->fetch()) {
+    $count = $record['count'];
+}
 
 header("Content-Type: application/json");
-
-$count = '110';
 
 $jsonData = array("gilla" => $count);
 echo(json_encode($jsonData));

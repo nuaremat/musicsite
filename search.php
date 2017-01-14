@@ -1,7 +1,7 @@
 <?php
 
-	$script="searchFunctions.js"; 
-	$title="Search";
+	$script = "searchFunctions.js"; 
+	$title = "Search";
 	$slimbox = TRUE;
 	$jquery = TRUE;
 	

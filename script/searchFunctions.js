@@ -19,10 +19,11 @@ $('.like-button').click(function (e) {
         url: 'ajax/likesong.php', // fil att hämta JSON ur
         type: 'POST',
         dataType: 'json',
+        data: { dataId: dataId },
         // Lyckat
         success: function (result) {
             // spanen med samma data-id som like-knappen visar resultatet på svaret från JSON
-            $('span[data-id=' + dataId + ']').html(result['gilla']);
+            $('span[data-id=' + dataId + ']').html(result.gilla);
         },
         // Misslyckat
         error: function (xhr, status, error) {
@@ -47,9 +48,9 @@ $('input[name="btnSave"]').click(function (e) {
         dataType: 'json',
         // Lyckat
         success: function (result) {
-            if (result['comment'] !== "") { // Om kommentaren inte är tom
+            if (result.comment !== "") { // Om kommentaren inte är tom
                 // Appenda kommentar till kommentarsfältet
-                commentArea.prepend('<p><b>' + result['date'] + ': </b><i>' + result['comment'] + '</i>');
+                commentArea.prepend('<p><b>' + result.date + ': </b><i>' + result.comment + '</i>');
             }
         },
         // Misslyckat
