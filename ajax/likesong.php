@@ -12,10 +12,14 @@
 	*	
 	*/
 
+header("Content-Type: application/json");
+
 include('../src/databaseFunctions.php');
 
+// indata från AJAX
 $dataId = $_POST['dataId'];
 
+// Databasuppkoppling
 try {
     $db = myDBConnect();
 } catch (Exception $e) {
@@ -34,8 +38,6 @@ $stmt->execute();
 while ($record = $stmt->fetch()) {
     $count = $record['count'];
 }
-
-header("Content-Type: application/json");
 
 $jsonData = array("gilla" => $count);
 echo(json_encode($jsonData));

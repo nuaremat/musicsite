@@ -38,18 +38,20 @@ $('input[name="btnSave"]').click(function (e) {
     
     // sparar data-id till klickat element i en variabel
     var dataId = $(this).parents("form[name=frmcomment]").attr('data-id'),
-        textareaValue = $(this).siblings('textarea[name="txtComment"]').html(),
-        commentArea = $('div[data-id=' + dataId + ']');
-    
+        textareaValue = $(this).siblings('textarea[name="txtComment"]').val(),
+        commentArea = $('div[data-id=' + dataId + ']'),
+        data = { dataId: dataId,
+                 textareaValue: textareaValue };
     // AJAXanrop
     $.ajax({
         url: 'ajax/savecomment.php', // fil att hämta JSON ur
         type: 'POST',
         dataType: 'json',
+        data: data,
         // Lyckat
         success: function (result) {
             if (result.comment !== "") { // Om kommentaren inte är tom
-                // Appenda kommentar till kommentarsfältet
+                // Prependa kommentar till kommentarsfältet
                 commentArea.prepend('<p><b>' + result.date + ': </b><i>' + result.comment + '</i>');
             }
         },

@@ -44,11 +44,9 @@ school project
 ✅ listComments()
 
 ###AJAX
+✅ likesong.php
 
-❌ likesong.php
-
-❌ savecomment.php
+✅ savecomment.php
 
 ###Admin
-
 ❌ loginFunction.php
