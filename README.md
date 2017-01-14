@@ -50,6 +50,9 @@ school project
 
 ###Admin
 ✅ validateUser()
+
 ❌ startSession()
+
 ❌ endSession()
+
 ❌ checkSession()
