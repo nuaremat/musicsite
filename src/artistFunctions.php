@@ -145,13 +145,29 @@
     function deleteArtist($dbConnection, $inArtistId, $inPictureFileName) {
         
         try{
-            /* Ta bort raden i databasen */
-            $stmt = $dbConnection->prepare('DELETE FROM tblartist WHERE id = ?');
+            // Hittar alla sången som är länkade till artisten
+            $stmt = $dbConnection->prepare('SELECT * FROM tblsong WHERE artistid = ?;');
+            $stmt->bindParam(1, $inArtistId);
+            $stmt->execute();
+
+            while($record = $stmt->fetch()){
+                // Varje iteration kollar den en ny sång som är länkad till artisten och verifierar att den finns
+                // Hämtar den absoluta platsen till filen
+                // Källa: http://php.net/realpath
+                $deleteSong = realpath('upload_ogg/' . $record['sound']);
+                if(file_exists($deleteSong)) {
+                    // Ta bort filen
+                    unlink($deleteSong);
+                }
+            }
+            // Ta bort artisten samt låtarna från databasen
+            $stmt = $dbConnection->prepare('DELETE tblartist, tblsong FROM tblartist INNER JOIN tblsong ON tblartist.id = tblsong.artistid WHERE tblartist.id = ?');
             $stmt->bindParam(1, $inArtistId);
             $stmt->execute();
             
             /* Ta bort bildfilen */
-            // Sökväg till bildfilen
+            // Hämtar den absoluta platsen till filen
+            // Källa: http://php.net/realpath
             $inPicturePath = realpath('upload_jpg/' . $inPictureFileName);
             
             // Kolla om filen finns

@@ -114,7 +114,7 @@
 	function listComments($inDBConnection, $inSongId){
 
 		try{
-			$comments = $inDBConnection->query('SELECT * FROM tblcomment WHERE songid = "' . $inSongId . '"');
+			$comments = $inDBConnection->query('SELECT * FROM tblcomment WHERE songid = "' . $inSongId . '";');
 			if ($comments->rowCount() == 0) {
 	            echo ('Inga kommentarer att visa, fyll p&aring; med dina &aring;sikter!');
 	        } else {
