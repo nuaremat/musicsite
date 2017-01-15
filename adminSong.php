@@ -57,8 +57,8 @@
                     // Kör updateSong om sång ID redan finns
                     $record = $stmt->fetch();
                     $oldName = $record['sound'];
-                    // $_FILES får 2 parametrar här för att komma åt namnet
-                    updateSong($db, $_POST['hidId'], $_POST['selArtistId'], $_POST['txtCount'], $_POST['txtTitle'], $_FILES['fileSoundFileName']['name'], $oldName);
+                    
+                    updateSong($db, $_POST['hidId'], $_POST['selArtistId'], $_POST['txtCount'], $_POST['txtTitle'], $_FILES['fileSoundFileName'], $oldName);
                 }
             } 
             elseif (isset($_POST['btnDelete'])) {

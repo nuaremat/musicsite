@@ -139,7 +139,7 @@
             validateAndMoveUploadedFile('ogg');
             // Om det inte kastas fel (dvs filen är nu korrekt) så uppdateras databasen med ny fil
             $stmt = $inDBConnection->prepare('UPDATE tblsong SET sound = ? WHERE id = ?;');
-            $stmt->bindParam(1, $inNewSongFileName);
+            $stmt->bindParam(1, $inNewSongFileName['name']);
             $stmt->bindParam(2, $inSongId);
             $stmt->execute();
 

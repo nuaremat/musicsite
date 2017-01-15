@@ -87,7 +87,7 @@
     function insertArtist($dbConnection, $inArtist, $inNewPictureFileName) {
         
         try{
-             // Validerar filen och lägger den i rätt underkatalog
+            // Validerar filen och lägger den i rätt underkatalog
             validateAndMoveUploadedFile('jpg');
             // Om det inte kastas fel (dvs filen är nu korrekt) så läggs den till databasen
             $stmt = $dbConnection->prepare('INSERT INTO tblartist(name, picture) VALUES(?, ?);');
