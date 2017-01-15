@@ -38,26 +38,29 @@ $('input[name="btnSave"]').click(function (e) {
     
     // sparar data-id till klickat element i en variabel
     var dataId = $(this).parents("form[name=frmcomment]").attr('data-id'),
-        textareaValue = $(this).siblings('textarea[name="txtComment"]').val(),
+        textarea = $(this).siblings('textarea[name="txtComment"]'),
+        textareaValue = textarea.val(),
         commentArea = $('div[data-id=' + dataId + ']'),
         data = { dataId: dataId,
                  textareaValue: textareaValue };
-    // AJAXanrop
-    $.ajax({
-        url: 'ajax/savecomment.php', // fil att hämta JSON ur
-        type: 'POST',
-        dataType: 'json',
-        data: data,
-        // Lyckat
-        success: function (result) {
-            if (result.comment !== "") { // Om kommentaren inte är tom
-                // Prependa kommentar till kommentarsfältet
-                commentArea.prepend('<p><b>' + result.date + ': </b><i>' + result.comment + '</i>');
+    
+        // AJAXanrop
+        $.ajax({
+            url: 'ajax/savecomment.php', // fil att hämta JSON ur
+            type: 'POST',
+            dataType: 'json',
+            data: data,
+            // Lyckat
+            success: function (result) {
+                    // Prependa kommentar till kommentarsfältet
+                    commentArea.prepend('<p><b>' + result.date + ': </b><i>' + result.comment + '</i>');
+                    // Tömmer textarean
+                    textarea.val("");
+            },
+            // Misslyckat
+            error: function (xhr, status, err) {
+                window.alert(xhr.statusText + " : " + status + " : " + err);
             }
-        },
-        // Misslyckat
-        error: function (xhr, status, error) {
-            window.alert(xhr.statusText + " : " + status + " : " + error);
-        }
-    });
+        });
+    
 });

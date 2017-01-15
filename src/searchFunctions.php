@@ -95,7 +95,6 @@
 	                echo ('<audio controls="controls"><source src="upload_ogg/' . $sound . '" />');
 	                echo ('Din webbl&auml;sare st&ouml;djer inte audio-taggen!</audio><br /></p><hr />');
 	            }
-	            
 	        }
 	        // Slut av låtutsökning
 	        echo '</fieldset>';

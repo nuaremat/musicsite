@@ -145,7 +145,7 @@
     function deleteArtist($dbConnection, $inArtistId, $inPictureFileName) {
         
         try{
-            // Hittar alla sången som är länkade till artisten
+            // Hittar alla sånger som är länkade till artisten
             $stmt = $dbConnection->prepare('SELECT * FROM tblsong WHERE artistid = ?;');
             $stmt->bindParam(1, $inArtistId);
             $stmt->execute();
