@@ -8,6 +8,12 @@
 	$admin = "secretpage";
 
     include('src/databaseFunctions.php');
+    include('src/loginFunctions.php');
+
+    // Kolla om man är inloggad
+    if (!checkSession()) {
+        header("Location: login.php");
+    }
 
     try {
         $db = myDBConnect();
