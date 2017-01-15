@@ -17,7 +17,7 @@
 		header("Content-Type: application/json");
 		// Indata från AJAX
 		$dataId = $_POST['dataId'];
-		$textareaValue = $_POST['textareaValue'];
+		$textareaValue = strip_tags($_POST['textareaValue']);
 		// Function date http://php.net/manual/en/function.date.php
 		$date = date('Y-m-d H:i:s');
 		include('../src/databaseFunctions.php');
