@@ -160,8 +160,12 @@
                     unlink($deleteSong);
                 }
             }
-            // Ta bort artisten samt låtarna från databasen
-            $stmt = $dbConnection->prepare('DELETE tblartist, tblsong FROM tblartist INNER JOIN tblsong ON tblartist.id = tblsong.artistid WHERE tblartist.id = ?');
+            // Ta bort låtarna från databasen
+            $stmt = $dbConnection->prepare('DELETE FROM tblsong WHERE artistid = ?;');
+            $stmt->bindParam(1, $inArtistId);
+            $stmt->execute();
+            // Ta bort artisten från databasen
+            $stmt = $dbConnection->prepare('DELETE FROM tblartist WHERE id = ?;');
             $stmt->bindParam(1, $inArtistId);
             $stmt->execute();
             

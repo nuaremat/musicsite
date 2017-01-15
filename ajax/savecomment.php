@@ -31,7 +31,7 @@
 	    $db = myDBConnect();
 	
 		// Sätt in ny kommentar i databasen
-		// Prepare & execute hjälper att säkra mot injection)
+		// Prepare & execute hjälper att säkra mot injection
 		// Källa: http://ch1.php.net/pdo.prepared-statements
 		$stmt = $db->prepare('INSERT INTO tblcomment (text, songid, insertdate) VALUES (?, ?, ?);');
 		$stmt->bindParam(1, $textareaValue);
@@ -48,5 +48,6 @@
 	}catch (Exception $e) {
 	    // Skriv ut error på sidan senare.
 	    $err = $e->getMessage();
+	    $err.ajaxError();
 	}
 ?>
