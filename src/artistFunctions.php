@@ -113,7 +113,7 @@
 	function updateArtist($dbConnection, $inArtistId, $inArtist, $inNewPictureFileName, $inOldPictureFileName) {
         
         try{
-            // Om der är en ny bildfil
+            // Om det är en ny bildfil
             if($inNewPictureFileName !== $inOldPictureFileName && $inNewPictureFileName !== ""){
                  // Validerar filen och lägger den i rätt underkatalog
                 validateAndMoveUploadedFile('jpg');
