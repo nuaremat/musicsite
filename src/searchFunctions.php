@@ -139,7 +139,7 @@
 	function printCommentForm($songId, $inSongFileName) {
 
 		$skriv = '<form action="#" method="post" name="frmcomment" data-id="' . $songId . '">';
-		$skriv .= '<span class="toggle-button">Comment låt</span>';
+		$skriv .= '<span class="toggle-button">Comment ' . $inSongFileName . '</span>';
 		$skriv .= '<fieldset class="toggle-result"> <legend> Comment on ' . $inSongFileName . '</legend>';
 		$skriv .= '<textarea name="txtComment" cols="40" rows="10" title="Comment" required="required" placeholder="Write your comment!"></textarea><br />';
 		$skriv .= '<input type="hidden" name="hidId" value="' . $songId . '" />';

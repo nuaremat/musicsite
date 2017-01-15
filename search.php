@@ -23,8 +23,6 @@
     <hr />
 
     <?php printSearchForm(); ?>
-
-    <!-- Hårdkodad HTML5 för utsökning av song -->
     		
     <?php 
         if (isset($_POST['btnSearch'])){

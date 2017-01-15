@@ -9,27 +9,32 @@ $(function () {
     });
 });
 
+// Kör funktionen validateSongFormData när man trycker på Save
 $('input[value=Save]').click(validateSongFormData);
-
+// Kör funktionen resetSongFormData när man trycker på Reset
 $('input[value=Reset]').click(resetSongFormData);
-
+// Lyssnare för Edit-knappen
 $('input[value=Edit]').click(function (e) {
-    
+    // Hämtar nödvändiga referenser till värden i formulärets element
     var dataId = $(this).siblings('input[name=hidId]').attr('value');
     var artistId = $(this).siblings('input[name=hidArtistId]').attr('value');
     var title = $(this).siblings('input[name=hidTitle]').attr('value');
     var fileName = $(this).siblings('input[name=hidSoundFileName]').attr('value');
     var count = $(this).siblings('input[name=hidCount]').attr('value');
     
+    // Skickar med värdena med funktionen copySongFormData
     copySongFormData(dataId, fileName, artistId, title, count);
 });
 
+// Lyssnare för Delete-knappen
 $('input[value=Delete]').click(function (e) {
-    
+    // Hämtar nödvändiga referenser till värden i formulärets element
     var dataId = $(this).siblings('input[name=hidId]').attr('value');
     var title = $(this).siblings('input[name=hidTitle]').attr('value');
+    // Variabel som är true/false beroende på vad som klickas i confirm-boxen
     var val = verifyDeleteOfSong(dataId, title);
     
+    // Om man trycker på Avbryt händer ingenting
     if(val===false)
     	e.preventDefault();
 });
