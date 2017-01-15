@@ -15,18 +15,18 @@
 	
 	try {
 		header("Content-Type: application/json");
-
 		// Indata från AJAX
 		$dataId = $_POST['dataId'];
 		$textareaValue = $_POST['textareaValue'];
 		// Function date http://php.net/manual/en/function.date.php
 		$date = date('Y-m-d H:i:s');
-
 		include('../src/databaseFunctions.php');
 
 		if($textareaValue == ""){
+			// Om textarean är tom så hoppar vi ur anropet,
+			// och får ett abrupt slut på json som errormeddelande
 			throw new Exception('Du skrev ingen kommentar!');
-			}
+		}
 		// Databasuppkoppling
 	    $db = myDBConnect();
 	
@@ -46,8 +46,7 @@
 		$jsonData = array("date" => $date, "comment" => $textareaValue);
 		echo(json_encode($jsonData));
 	}catch (Exception $e) {
-	    // Skriv ut error på sidan senare.
-	    $err = $e->getMessage();
-	    $err.ajaxError();
+	    // Tar emot felet, men rapporterar inget
+	    $error = 'Error connecting to DB: ' . $e->getMessage();
 	}
 ?>

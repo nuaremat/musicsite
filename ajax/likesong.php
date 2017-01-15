@@ -11,35 +11,31 @@
 	*   Kom ihåg att tvätta data, frigöra minnet från utsökningen, stänga ner databaskopplingen samt använda undantagshantering.
 	*	
 	*/
+	try {
+		header("Content-Type: application/json");
+		include('../src/databaseFunctions.php');
+		// indata från AJAX
+		$dataId = $_POST['dataId'];
+		// Databasuppkoppling
+		$db = myDBConnect();
 
-header("Content-Type: application/json");
+		$stmt = $db->prepare('UPDATE tblsong SET count = count + 1 WHERE id = ?;');
+		$stmt->bindParam(1, $dataId);
+		$stmt->execute();
 
-include('../src/databaseFunctions.php');
+		$stmt = $db->prepare('SELECT * FROM tblsong WHERE id = ?;');
+		$stmt->bindParam(1, $dataId);
+		$stmt->execute();
+		$count = $stmt->fetch();
+		// Frigör minne
+		$stmt = NULL;
+		// Stäng ner databaskopplingen
+		$db = NULL;
 
-// indata från AJAX
-$dataId = $_POST['dataId'];
-
-// Databasuppkoppling
-try {
-    $db = myDBConnect();
-} catch (Exception $e) {
-    // Skriv ut error på sidan senare.
-    $error = 'Error connecting to DB: ' . $e->getMessage();
-}
-
-$stmt = $db->prepare('UPDATE tblsong SET count = count + 1 WHERE id=?;');
-$stmt->bindParam(1, $dataId);
-$stmt->execute();
-
-$stmt = $db->prepare('SELECT * FROM tblsong WHERE id=?;');
-$stmt->bindParam(1, $dataId);
-$stmt->execute();
-
-while ($record = $stmt->fetch()) {
-    $count = $record['count'];
-}
-
-$jsonData = array("gilla" => $count);
-echo(json_encode($jsonData));
-
+		$jsonData = array("gilla" => $count['count']);
+		echo(json_encode($jsonData));
+	} catch (Exception $e) {
+	    // Tar emot felet, men rapporterar inget
+	    $error = 'Error connecting to DB: ' . $e->getMessage();
+	}
 ?>
