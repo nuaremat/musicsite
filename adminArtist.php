@@ -72,6 +72,11 @@
         ?>
 
         <?php printArtistForm(); ?>
+        <?php
+            if(isset($error)) {
+                echo $error;
+            }
+        ?>
     </fieldset>
 
     <div id="accordion"> <!-- Accordion start -->

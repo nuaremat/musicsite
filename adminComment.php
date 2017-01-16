@@ -30,7 +30,11 @@
 
     <h1>Admin Comment</h1>
     <hr />
-    
+    <?php
+        if(isset($error)) {
+            echo $error;
+        }
+    ?>
     <div id="accordion"> <!-- Accordion start -->
         <?php
             if (isset($_POST['btnDelete'])) {

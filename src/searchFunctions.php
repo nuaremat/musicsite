@@ -74,8 +74,7 @@
             $tunes->bindParam(1, $inSearchString);
             $tunes->execute();
 	        // Start av låtutsökning
-			echo '<fieldset><legend>Searchresult Song</legend>';
-	         // Kollar om det finns några rader i tabellen
+	        // Kollar om det finns några rader i tabellen
 	        if ($tunes->rowCount() == 0) {
 	            echo ('Inga l&aring;tar matchar din s&ouml;kning!');
 	        } else {
@@ -98,9 +97,7 @@
 	                echo ('<audio controls="controls"><source src="upload_ogg/' . $sound . '" />');
 	                echo ('Din webbl&auml;sare st&ouml;djer inte audio-taggen!</audio><br /></p><hr />');
 	            }
-	        }
-	        // Slut av låtutsökning
-	        echo '</fieldset>';
+	        } // Slut av låtutsökning
         } catch(Exception $e) {
         	echo 'Kunde inte visa l&aring;tar: ' . $e->getMessage();
         }

@@ -35,7 +35,11 @@
         <legend>New/Edit Song</legend>
 
         <span id="jsErrorMsg" class="errorClass"></span>
-        
+        <?php
+            if(isset($error)) {
+                echo $error;
+            }
+        ?>
         <?php printSongForm($db); ?>
 
         <?php
@@ -67,8 +71,7 @@
                 deleteSong($db, $_POST['hidId'], $_POST['hidSoundFileName']);
             } 
         ?>
-
-
+        
     </fieldset>
 
     <div id="accordion"> <!-- Accordion start -->

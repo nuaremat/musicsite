@@ -59,7 +59,10 @@ $('input[name="btnSave"]').click(function (e) {
             },
             // Misslyckat
             error: function (xhr, status, err) {
-                window.alert(xhr.statusText + " : " + status + " : " + err);
+                if(textarea.val() == "") // Om textarean är tom 
+                    textarea.attr('placeholder', 'Du har inte skrivit en kommentar!');
+                else // Annars är det något annat fel som skedde i anropet
+                    window.alert(xhr.statusText + " : " + status + " : " + err);
             }
         });
     

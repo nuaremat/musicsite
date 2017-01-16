@@ -50,6 +50,6 @@
 		echo(json_encode($jsonData));
 	}catch (Exception $e) {
 	    // Tar emot felet, men rapporterar inget
-	    $error = 'Error connecting to DB: ' . $e->getMessage();
+	    // $.ajax har sitt egna system som går före try/catch i denna fil
 	}
 ?>
