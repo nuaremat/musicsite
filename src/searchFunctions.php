@@ -87,8 +87,7 @@
 	                $artistid = $record['artistid'];
 	                $changedate = $record['changedate'];
 
-	                // Hade hellre använt konkatenering, men när listComments inte får returnera data och måste annvändas blir det ej ko.
-					echo '<span class="toggle-button"> Show all comments</span>';
+	                echo '<span class="toggle-button"> Show all comments</span>';
 	        		echo ('<div data-comments="comments" data-id="' . $id . '" class="toggle-result">');
 	                listComments($inDBConnection, $id);
 	                echo '</div>'; 
