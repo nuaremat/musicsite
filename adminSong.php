@@ -13,6 +13,7 @@
         header("Location: login.php");
     }
 
+    // Databasuppkoppling
     try {
         $db = myDBConnect();
     } catch (Exception $e) {
@@ -30,8 +31,6 @@
     <h1>Admin Song</h1>
     <hr />
 
-    <!-- Hårdkodad HTML5 för Admin Song -->
-
     <fieldset>
         <legend>New/Edit Song</legend>
 
@@ -45,7 +44,9 @@
                 if(empty($_FILES) && empty($_POST) && isset($_SERVER["REQUEST_METHOD"]) && ($_SERVER["REQUEST_METHOD"] == "POST")) {
                     throw new Exception("Du försöke skicka för mycket data.<br />\n'max_post_size' är idag satt till ".ini_get("post_max_size"));
                 }
-
+                
+                // prepare skyddar mot SQL injection
+                // http://php.net/manual/en/pdo.prepare.php
                 $stmt = $db->prepare('SELECT * FROM tblsong WHERE id = ?;');
                 $stmt->bindParam(1, $_POST['hidId']);
                 $stmt->execute();
@@ -62,7 +63,6 @@
                 }
             } 
             elseif (isset($_POST['btnDelete'])) {
-                
                 // Anropar funktionen för att ta bort vald låt
                 deleteSong($db, $_POST['hidId'], $_POST['hidSoundFileName']);
             } 
@@ -71,11 +71,11 @@
 
     </fieldset>
 
-    <div id="accordion">
+    <div id="accordion"> <!-- Accordion start -->
 
         <?php listSongs($db); ?>
         
-    </div>
+    </div> <!-- Accordion end -->
 
 </div>
 

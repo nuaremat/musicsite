@@ -8,16 +8,18 @@
 	*
 	*	@param resurce $dbConnection Databaskoppling
 	*/
-    function listComments($inDBConnection){
+    function listComments($inDBConnection) {
         
-        try{
+        try {
             // Kod för att lista kommentarer ur databasen här
-            $comments = $inDBConnection->query('SELECT text, tblcomment.id, songid, title FROM tblcomment, tblsong WHERE tblcomment.songid = tblsong.id GROUP BY tblcomment.id');
+            $comments = $inDBConnection->prepare('SELECT text, tblcomment.id, songid, title FROM tblcomment, tblsong WHERE tblcomment.songid = tblsong.id GROUP BY tblcomment.id');
+            $comments->execute();
 
             // Kollar om det finns några rader i tabellen
             if ($comments->rowCount() == 0) {
                 echo ('Det finns inga kommentarer i databasen!');
             } else {
+                // Loopar igenom registret och skriver ut artisterna i en accordion
                 while ($record = $comments->fetch()) {
                     $commentid = $record['id'];
                     $songid = $record['songid'];
@@ -38,7 +40,7 @@
                     echo ('</form></div>');
                 }
             }
-        }catch(Exception $e){
+        } catch(Exception $e) {
             echo 'Gick ej att lista kommentarer: ' . $e->getMessage();
         }
     }
@@ -52,12 +54,14 @@
 	*/
 	function deleteComment($inDBConnection, $inCommentId) {
         
-        try{
+        try {
             // Kod för att ta bort klickad kommentar
+            // prepare skyddar mot SQL injection
+            // http://php.net/manual/en/pdo.prepare.php
             $comments = $inDBConnection->prepare('DELETE FROM tblcomment WHERE id=?;');
             $comments->bindParam(1, $inCommentId);
             $comments->execute();
-        }catch(Exception $e){
+        } catch(Exception $e) {
             echo 'Kan inte ta bort kommentar: ' . $e.getMessage();
         }
         

@@ -5,6 +5,7 @@
     include('src/databaseFunctions.php');
     include('src/loginFunctions.php');
     
+    // Kolla om man är inloggad
     if (checkSession()) {
         header("Location: adminArtist.php");
         exit();
@@ -13,10 +14,11 @@
     // Om man trycker på "Login"-knappen i login.php
     if (isset($_POST["btnLogin"])) {
         try {
+            // Databasuppkoppling
             $db = myDBConnect();
             // kollar om användaren finns och om lösenordet är rätt
-            // Måste connecta med databasen innan, men include header skriver ut html så då fungerar inte startSession()
             if (validateUser($db, $_POST["txtUserName"], $_POST["txtPassWord"]) === 1) {
+                // Starta sessionen som kontrollerar om man är inloggad
                 startSession();
                 header("Location: adminArtist.php");
                 exit();

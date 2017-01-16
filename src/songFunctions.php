@@ -11,7 +11,8 @@
     function printSongForm($inDBConnection) {
 
     	// Hämtar alla artister
-    	$artists = $inDBConnection->query('SELECT * FROM tblartist;');
+    	$artists = $inDBConnection->prepare('SELECT * FROM tblartist;');
+        $artists->execute();
 
     	// Lägger in allt som ska skrivas i en sträng som konkatineras kontinuerligt
     	$skriv = '<form action="adminSong.php" method="post" id="frmNewUpdateSong" name="frmNewUpdateSong" enctype="multipart/form-data">';
@@ -22,6 +23,7 @@
         if ($artists->rowCount() == 0) {
             // Om det inte finns artister, lista inte några
         } else {
+            // Loopar igenom registret och skriver ut befintliga artister i som options
             while ($record = $artists->fetch()) {
                 $id = $record['id'];
                 $name = $record['name'];
@@ -53,9 +55,10 @@
 	*/
     function listSongs($inDBConnection) {
 
-        try{
+        try {
         	// Hämtar alla sånger
-        	$tunes = $inDBConnection->query('SELECT * FROM tblsong;');
+        	$tunes = $inDBConnection->prepare('SELECT * FROM tblsong;');
+            $tunes->execute();
 
         	if ($tunes->rowCount()==0) {
         		echo('Det finns inga s&aring;nger i databasen!');
@@ -86,7 +89,7 @@
     				echo($skriv);
     			}
         	}
-        }catch(Exception $e){
+        } catch(Exception $e){
             echo 'Gick ej att lista songs: ' . $e->getMessage();
         }
     }
@@ -104,17 +107,19 @@
 	*/
 	function insertSong($inDBConnection, $inArtistId, $inCount, $inTitle, $inNewSongFileName) {
 
-        try{
+        try {
             // Validerar filen och lägger den i rätt underkatalog
     		validateAndMoveUploadedFile('ogg');
             // Om det inte kastas fel (dvs filen är nu korrekt) så läggs den till databasen
+            // prepare skyddar mot SQL injection
+            // http://php.net/manual/en/pdo.prepare.php
             $stmt = $inDBConnection->prepare('INSERT INTO tblsong(title, sound, count, artistid) VALUES(?, ?, ?, ?);');
             $stmt->bindParam(1, $inTitle);
             $stmt->bindParam(2, $inNewSongFileName["name"]);
             $stmt->bindParam(3, $inCount);
             $stmt->bindParam(4, $inArtistId);
             $stmt->execute();
-        }catch(Exception $e){
+        } catch(Exception $e) {
             // Kastat fel med felmeddelande tas emot och skrivs ut
             echo 'Gick ej att ladda up l&aring;t: ' . $e->getMessage();
         }
@@ -134,22 +139,24 @@
 	*/
     function updateSong($inDBConnection, $inSongId, $inArtistId, $inCount, $inTitle, $inNewSongFileName, $inOldSongFileName) {
 
-        try{
+        try {
             // Om det är en ny låtfil
-            if($inNewSongFileName !== $inOldSongFileName && $inNewSongFileName !== ""){
+            if ($inNewSongFileName !== $inOldSongFileName && $inNewSongFileName !== "") {
                 // Validerar filen och lägger den i rätt underkatalog
                 validateAndMoveUploadedFile('ogg');
                 // Hämtar den absoluta platsen till gamla filen
                 // Källa: http://php.net/realpath
                 $inSongPath = realpath('upload_ogg/' . $inOldSongFileName);
-                if(file_exists($inSongPath)) {
+                if (file_exists($inSongPath)) {
                     // Ta bort gamla filen om den finns
                     unlink($inSongPath);
                 }
-            }else{ // Ingen uppdaterad låt, så smidigare kod fås genom att helt enkelt uppdatera med samma namn
+            } else { // Ingen uppdaterad låt, så smidigare kod fås genom att helt enkelt uppdatera med samma namn
                 $inNewSongFileName = $inOldSongFileName;
             }
             // Allting uppdateras oavsett ändringar eller ej
+            // prepare skyddar mot SQL injection
+            // http://php.net/manual/en/pdo.prepare.php
             $stmt = $inDBConnection->prepare('UPDATE tblsong SET title = ?, sound = ?, count = ?, artistid = ?, changedate = ? WHERE id = ?;');
             $stmt->bindParam(1, $inTitle);
             $stmt->bindParam(2, $inNewSongFileName);
@@ -160,7 +167,7 @@
             $stmt->execute();
 
             
-        }catch(Exception $e){
+        } catch(Exception $e) {
             echo 'Gick ej att uppdatera l&aring;t: ' . $e->getMessage();
         }
     }
@@ -175,7 +182,7 @@
 	*/
     function deleteSong($inDBConnection, $inSongId, $inSongFileName) {
        
-        try{
+        try {
             // Tar bort filen från databasen
             $stmt = $inDBConnection->prepare('DELETE FROM tblsong WHERE id = ?;');
             $stmt->bindParam(1, $inSongId);
@@ -188,7 +195,7 @@
                 // Ta bort filen om den finns
                 unlink($inSongPath);
             } 
-        }catch(Exception $e){
+        } catch(Exception $e) {
             echo 'Gick ej att ta bort song: ' . $e.getMessage();
         }
     }

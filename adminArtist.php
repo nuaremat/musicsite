@@ -15,6 +15,7 @@
         header("Location: login.php");
     }
 
+    // Databasuppkoppling
     try {
         $db = myDBConnect();
     } catch (Exception $e) {
@@ -33,8 +34,6 @@
     <h1>Admin Artist</h1>
     <hr />
 
-    <!-- Hårdkodad HTML5 för Admin Artist -->
-
      <fieldset>
         <legend>New/Edit Artist</legend>
 
@@ -46,7 +45,9 @@
                 if(empty($_FILES) && empty($_POST) && isset($_SERVER["REQUEST_METHOD"]) && ($_SERVER["REQUEST_METHOD"] == "POST")) {
                     throw new Exception("Du försöke skicka för mycket data.<br />\n'max_post_size' är idag satt till ".ini_get("post_max_size"));
                 }
-
+                
+                // prepare skyddar mot SQL injection
+                // http://php.net/manual/en/pdo.prepare.php
                 $stmt = $db->prepare('SELECT * FROM tblartist WHERE id = ?;');
                 $stmt->bindParam(1, $_POST['hidId']);
                 $stmt->execute();
@@ -64,7 +65,7 @@
                 
             } elseif (isset($_POST['btnDelete'])) {
                 
-                 // Anropar funktionen för att ta bort vald artist
+                // Anropar funktionen för att ta bort vald artist
                 deleteArtist($db, $_POST['hidId'], $_POST['hidPictureFileName']);
                 
             } 
@@ -74,9 +75,7 @@
     </fieldset>
 
     <div id="accordion"> <!-- Accordion start -->
-
         <?php listArtists($db); ?>
-
     </div> <!-- Accordion end -->
 
 </div>

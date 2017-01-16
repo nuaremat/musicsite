@@ -7,7 +7,6 @@
 	*
 	*/
     function printSearchForm() {
-
     	$skriv = '<form action="search.php" method="post" name="frmsearch">';
     	$skriv .= '<fieldset> <legend> Song and/or Artist </legend>';
     	$skriv .= '<input type="text" id="txtsearch" name="txtSearch" title="Song and/or Artist!" required="required" placeholder="Type Artist or Song and press Search!" size="35" autofocus="autofocus"/>';
@@ -26,17 +25,20 @@
 	*	@param string $inSearchString Söksträngen 
 	*/
 	function listArtists($inDBConnection, $inSearchString) {
-		try{
+		try {
 			// Kod för att lista artister ur databasen, 
 			// finner match på delar av artistnamn sålänge alla sökta tecken är i starten 
 			// Ex; "Lal" ger resultatet Laleh, men "ale" ger inget resultat på Laleh. (Medvetet programmerat)
-	        $artists = $inDBConnection->query('SELECT * FROM tblartist WHERE name LIKE "' . $inSearchString . '%";');
+	        $artists = $inDBConnection->prepare('SELECT * FROM tblartist WHERE name LIKE CONCAT(?, "%");');
+            $artists->bindParam(1, $inSearchString);
+            $artists->execute();
 	        // Start av artistutsökning
 	        echo '<fieldset><legend>Searchresult Artist</legend>';
 	        // Kollar om det finns några rader i tabellen
 	        if ($artists->rowCount() == 0) {
 	            echo ('Inga artister matchar din s&ouml;kning!');
 	        } else {
+                // Loopar igenom registret och skriver ut artisterna
 	            while ($record = $artists->fetch()) {
 	                $name = $record['name'];
 	                $picture = $record['picture'];
@@ -50,7 +52,7 @@
 	        }
 	        // Slut av artistutsökning
 	        echo '</fieldset><br />';
-		}catch(Exception $e){
+		} catch(Exception $e) {
 			echo $e->getMessage();
 		}
 	}
@@ -66,9 +68,11 @@
 	*/
 	function listSongs($inDBConnection, $inSearchString) {
 
-		try{
+		try {
 			// Kod för att lista sånger ur databasen, fungerar på samma sätt som listArtists
-	        $tunes = $inDBConnection->query('SELECT * FROM tblsong WHERE title LIKE "' . $inSearchString . '%";');
+	        $tunes = $inDBConnection->prepare('SELECT * FROM tblsong WHERE title LIKE CONCAT(?, "%");');
+            $tunes->bindParam(1, $inSearchString);
+            $tunes->execute();
 	        // Start av låtutsökning
 			echo '<fieldset><legend>Searchresult Song</legend>';
 	         // Kollar om det finns några rader i tabellen
@@ -98,7 +102,7 @@
 	        }
 	        // Slut av låtutsökning
 	        echo '</fieldset>';
-        }catch(Exception $e){
+        } catch(Exception $e) {
         	echo 'Kunde inte visa l&aring;tar: ' . $e->getMessage();
         }
 	}
@@ -110,10 +114,12 @@
 	*	@param resurce $dbConnection Databaskoppling
 	*	@param string $inSongId Primärnyckeln för den sång som det skall listas kommentarer för. 
 	*/
-	function listComments($inDBConnection, $inSongId){
+	function listComments($inDBConnection, $inSongId) {
 
-		try{
-			$comments = $inDBConnection->query('SELECT * FROM tblcomment WHERE songid = "' . $inSongId . '";');
+		try {
+			$comments = $inDBConnection->prepare('SELECT * FROM tblcomment WHERE songid = ?;');
+            $comments->bindParam(1, $inSongId);
+            $comments->execute();
 			if ($comments->rowCount() == 0) {
 	            echo ('Inga kommentarer att visa, fyll p&aring; med dina &aring;sikter!');
 	        } else {
@@ -124,7 +130,7 @@
 				}
 				echo($skriv);
 			}
-		}catch(Exception $e){
+		} catch(Exception $e) {
 			echo 'Kunde inte lista kommentarer: ' . $e->getMessage();
 		}
 	}

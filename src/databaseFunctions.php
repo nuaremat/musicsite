@@ -35,6 +35,7 @@ function myDBConnect() {
  *         istället antalet påverkade rader (d.v.s. antalet rader som lades
  *         till eller togs bort).
  */
+// Vi använder inte denna funktion
 function myDBQuery($db, $query, ...$args) {
   try {
     $db->beginTransaction();

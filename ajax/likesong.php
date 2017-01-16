@@ -18,7 +18,9 @@
 		$dataId = $_POST['dataId'];
 		// Databasuppkoppling
 		$db = myDBConnect();
-
+        
+        // prepare skyddar mot SQL injection
+        // http://php.net/manual/en/pdo.prepare.php
 		$stmt = $db->prepare('UPDATE tblsong SET count = count + 1 WHERE id = ?;');
 		$stmt->bindParam(1, $dataId);
 		$stmt->execute();
@@ -31,8 +33,10 @@
 		$stmt = NULL;
 		// Stäng ner databaskopplingen
 		$db = NULL;
-
+        
+        // Ger "gilla"-fältet värdet som återfinns i $count
 		$jsonData = array("gilla" => $count['count']);
+        // Encoda till JSON och echoa ut
 		echo(json_encode($jsonData));
 	} catch (Exception $e) {
 	    // Tar emot felet, men rapporterar inget

@@ -3,6 +3,7 @@
 
     include("src/loginFunctions.php");
 
+    // Kolla om man är inloggad
     if (checkSession()) {
         endSession();
     } else {

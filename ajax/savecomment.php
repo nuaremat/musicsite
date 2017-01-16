@@ -23,7 +23,7 @@
 		include('../src/databaseFunctions.php');
 
 		if($textareaValue == ""){
-			// Om textarean är tom så hoppar vi ur anropet,
+			// Om textarean är tom hoppar vi ur anropet,
 			// och får ett abrupt slut på json som errormeddelande
 			throw new Exception('Du skrev ingen kommentar!');
 		}
@@ -31,19 +31,22 @@
 	    $db = myDBConnect();
 	
 		// Sätt in ny kommentar i databasen
-		// Prepare & execute hjälper att säkra mot injection
-		// Källa: http://ch1.php.net/pdo.prepared-statements
+		// prepare skyddar mot SQL injection
+        // http://php.net/manual/en/pdo.prepare.php
 		$stmt = $db->prepare('INSERT INTO tblcomment (text, songid, insertdate) VALUES (?, ?, ?);');
 		$stmt->bindParam(1, $textareaValue);
 		$stmt->bindParam(2, $dataId);
 		$stmt->bindParam(3, $date);
 		$stmt->execute();
+        
 		// Frigör minne
 		$stmt = NULL;
 		// Stäng ner databaskopplingen
 		$db = NULL;
-		// Skriv ut värden till JSON
+        
+		// Ger fälten värdena som återfinns i respektive variablar
 		$jsonData = array("date" => $date, "comment" => $textareaValue);
+        // Encoda till JSON och echoa ut
 		echo(json_encode($jsonData));
 	}catch (Exception $e) {
 	    // Tar emot felet, men rapporterar inget

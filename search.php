@@ -6,7 +6,8 @@
 	$jquery = TRUE;
 	
     include('src/databaseFunctions.php');
-
+    
+    // Databasuppkoppling
     try {
         $db = myDBConnect();
     } catch (Exception $e) {

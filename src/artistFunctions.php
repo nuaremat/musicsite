@@ -37,12 +37,14 @@
         
         try{
             // Kod för att lista kommentarer ur databasen här
-            $artists = $dbConnection->query('SELECT * FROM tblartist;');
+            $artists = $dbConnection->prepare('SELECT * FROM tblartist;');
+            $artists->execute();
 
             // Kollar om det finns några rader i tabellen
             if ($artists->rowCount() == 0) {
                 echo ('Det finns inga artister i databasen!');
             } else {
+                // Loopar igenom registret och skriver ut artisterna i en accordion
                 while ($record = $artists->fetch()) {
                     $id = $record['id'];
                     $name = $record['name'];
@@ -90,6 +92,8 @@
             // Validerar filen och lägger den i rätt underkatalog
             validateAndMoveUploadedFile('jpg');
             // Om det inte kastas fel (dvs filen är nu korrekt) så läggs den till databasen
+            // prepare skyddar mot SQL injection
+            // http://php.net/manual/en/pdo.prepare.php
             $stmt = $dbConnection->prepare('INSERT INTO tblartist(name, picture) VALUES(?, ?);');
             $stmt->bindParam(1, $inArtist);
             $stmt->bindParam(2, $inNewPictureFileName["name"]);
@@ -112,22 +116,24 @@
 	*/
 	function updateArtist($dbConnection, $inArtistId, $inArtist, $inNewPictureFileName, $inOldPictureFileName) {
         
-        try{
+        try {
             // Om det är en ny bildfil
-            if($inNewPictureFileName !== $inOldPictureFileName && $inNewPictureFileName !== ""){
+            if ($inNewPictureFileName !== $inOldPictureFileName && $inNewPictureFileName !== "") {
                  // Validerar filen och lägger den i rätt underkatalog
                 validateAndMoveUploadedFile('jpg');
                  // Hämtar den absoluta platsen till gamla filen
                 // Källa: http://php.net/realpath
                 $inPicturePath = realpath('upload_jpg/' . $inOldPictureFileName);
-                if(file_exists($inPicturePath)) {
+                if (file_exists($inPicturePath)) {
                     // Ta bort gamla filen om den finns
                     unlink($inPicturePath);
                 }
-            }else{ // Ingen uppdaterad bild, så smidigare kod fås genom att helt enkelt uppdatera med samma namn
+            } else { // Ingen uppdaterad bild, så smidigare kod fås genom att helt enkelt uppdatera med samma namn
                 $inNewPictureFileName = $inOldPictureFileName;
             }
             // Allting uppdateras oavsett ändringar eller ej 
+            // prepare skyddar mot SQL injection
+            // http://php.net/manual/en/pdo.prepare.php
             $stmt = $dbConnection->prepare('UPDATE tblartist SET picture = ?, name = ?, changedate = ? WHERE id = ?;');
             $stmt->bindParam(1, $inNewPictureFileName);
             $stmt->bindParam(2, $inArtist);
@@ -135,7 +141,7 @@
             $stmt->bindParam(4, $inArtistId);
             $stmt->execute();
 
-        }catch(Exception $e){
+        } catch (Exception $e) {
             echo 'Gick inte att uppdatera artist: ' . $e->getMessage();
         }
     }
@@ -153,12 +159,13 @@
         
         try{
             // Hittar alla sånger som är länkade till artisten
+            // prepare skyddar mot SQL injection
+            // http://php.net/manual/en/pdo.prepare.php
             $stmt = $dbConnection->prepare('SELECT * FROM tblsong WHERE artistid = ?;');
             $stmt->bindParam(1, $inArtistId);
             $stmt->execute();
-
-            while($record = $stmt->fetch()){
-                // Varje iteration kollar den en ny sång som är länkad till artisten och verifierar att den finns
+            // Varje iteration kollar den en ny sång som är länkad till artisten och verifierar att den finns
+            while ($record = $stmt->fetch()) {
                 // Hämtar den absoluta platsen till filen
                 // Källa: http://php.net/realpath
                 $deleteSong = realpath('upload_ogg/' . $record['sound']);
@@ -168,10 +175,14 @@
                 }
             }
             // Ta bort låtarna från databasen
+            // prepare skyddar mot SQL injection
+            // http://php.net/manual/en/pdo.prepare.php
             $stmt = $dbConnection->prepare('DELETE FROM tblsong WHERE artistid = ?;');
             $stmt->bindParam(1, $inArtistId);
             $stmt->execute();
             // Ta bort artisten från databasen
+            // prepare skyddar mot SQL injection
+            // http://php.net/manual/en/pdo.prepare.php
             $stmt = $dbConnection->prepare('DELETE FROM tblartist WHERE id = ?;');
             $stmt->bindParam(1, $inArtistId);
             $stmt->execute();
@@ -186,7 +197,7 @@
                 // Ta bort filen
                 unlink($inPicturePath);
             }
-        }catch(Exception $e){
+        } catch(Exception $e){
             echo 'Kunde inte ta bort artist: ' . $e->getMessage();
         }
     }

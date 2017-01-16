@@ -13,6 +13,7 @@
         header("Location: login.php");
     }
 
+    // Databasuppkoppling
     try {
         $db = myDBConnect();
     } catch (Exception $e) {
@@ -29,22 +30,17 @@
 
     <h1>Admin Comment</h1>
     <hr />
-
-    <!-- Hårdkodad HTML5 för Admin Comment -->
-            
-    <div id="accordion">
+    
+    <div id="accordion"> <!-- Accordion start -->
         <?php
-        
             if (isset($_POST['btnDelete'])) {
                 $hidId = $_POST['hidId'];
                 
                 deleteComment($db, $hidId);
             }
-        
         ?>
-        
         <?php listComments($db); ?>
-    </div>
+    </div> <!-- Accordion end -->
 </div>
 
 <?php include("incl/footer.php");

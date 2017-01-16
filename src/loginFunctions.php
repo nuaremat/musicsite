@@ -1,5 +1,6 @@
 <?php
 	/* Funktioner (inklusive parametrar) som behövs för att hantera användare och sessioner */
+    // Större delen av detta är gjort med hjälp av funktionerna från räknestugan
 	
 	/**
 	*	Funktionen validateUser söker ut antalet poster som matchar $inUserName och $inPassWord och returnerar talet (0 eller 1).
@@ -11,6 +12,8 @@
 	*	@return int Antalet rader som matchar sökkriterierna
 	*/
     function validateUser($inDBConnection, $inUserName, $inPassWord) {
+        // prepare skyddar mot SQL injection
+        // http://php.net/manual/en/pdo.prepare.php
         $stmt = $inDBConnection->prepare("SELECT username FROM tbladmin WHERE username = ? AND password = SHA1(?);");
         $stmt->bindParam(1, $inUserName);
         $stmt->bindParam(2, $inPassWord);
