@@ -23,8 +23,8 @@
 		include('../src/databaseFunctions.php');
 
 		if($textareaValue == ""){
-			// Om textarean är tom hoppar vi ur anropet,
-			// och får ett abrupt slut på json som errormeddelande
+			// Om textarean är tom hoppar vi ur anropet
+			// genom att kasta undantag
 			throw new Exception('Du skrev ingen kommentar!');
 		}
 		// Databasuppkoppling
