@@ -135,21 +135,31 @@
     function updateSong($inDBConnection, $inSongId, $inArtistId, $inCount, $inTitle, $inNewSongFileName, $inOldSongFileName) {
 
         try{
-            // Validerar filen och lägger den i rätt underkatalog
-            validateAndMoveUploadedFile('ogg');
-            // Om det inte kastas fel (dvs filen är nu korrekt) så uppdateras databasen med ny fil
-            $stmt = $inDBConnection->prepare('UPDATE tblsong SET sound = ? WHERE id = ?;');
-            $stmt->bindParam(1, $inNewSongFileName['name']);
-            $stmt->bindParam(2, $inSongId);
+            // Om det är en ny låtfil
+            if($inNewSongFileName !== $inOldSongFileName && $inNewSongFileName !== ""){
+                // Validerar filen och lägger den i rätt underkatalog
+                validateAndMoveUploadedFile('ogg');
+                // Hämtar den absoluta platsen till gamla filen
+                // Källa: http://php.net/realpath
+                $inSongPath = realpath('upload_ogg/' . $inOldSongFileName);
+                if(file_exists($inSongPath)) {
+                    // Ta bort gamla filen om den finns
+                    unlink($inSongPath);
+                }
+            }else{ // Ingen uppdaterad låt, så smidigare kod fås genom att helt enkelt uppdatera med samma namn
+                $inNewSongFileName = $inOldSongFileName;
+            }
+            // Allting uppdateras oavsett ändringar eller ej
+            $stmt = $inDBConnection->prepare('UPDATE tblsong SET title = ?, sound = ?, count = ?, artistid = ?, changedate = ? WHERE id = ?;');
+            $stmt->bindParam(1, $inTitle);
+            $stmt->bindParam(2, $inNewSongFileName);
+            $stmt->bindParam(3, $inCount);
+            $stmt->bindParam(4, $inArtistId);
+            $stmt->bindParam(5, (date('Y-m-d H:i:s')));
+            $stmt->bindParam(6, $inSongId);
             $stmt->execute();
 
-            // Hämtar den absoluta platsen till gamla filen
-            // Källa: http://php.net/realpath
-            $inSongPath = realpath('upload_ogg/' . $inOldSongFileName);
-            if(file_exists($inSongPath)) {
-                // Ta bort gamla filen om den finns
-                unlink($inSongPath);
-            }
+            
         }catch(Exception $e){
             echo 'Gick ej att uppdatera l&aring;t: ' . $e->getMessage();
         }

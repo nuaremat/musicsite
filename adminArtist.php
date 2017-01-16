@@ -58,7 +58,7 @@
                     // Kör updateArtist om artist ID redan finns
                     $record = $stmt->fetch();
                     $oldName = $record['picture'];
-                    // $_FILES söker upp namnet direkt för att underlätta updateArtist()
+                    // Accessar direkt namnet för nya filen för enklare hantering i updateArtist()
                     updateArtist($db, $_POST['hidId'], $_POST['txtArtist'], $_FILES['filePictureFileName']['name'], $oldName);
                 }
                 

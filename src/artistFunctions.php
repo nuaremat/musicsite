@@ -117,26 +117,24 @@
             if($inNewPictureFileName !== $inOldPictureFileName && $inNewPictureFileName !== ""){
                  // Validerar filen och lägger den i rätt underkatalog
                 validateAndMoveUploadedFile('jpg');
-                // Om det inte kastas fel (dvs filen är nu korrekt) så uppdateras databasen med ny fil
-                $stmt = $dbConnection->prepare('UPDATE tblartist SET picture = ?, name = ? WHERE id = ?;');
-                $stmt->bindParam(1, $inNewPictureFileName);
-                $stmt->bindParam(2, $inArtist);
-                $stmt->bindParam(3, $inArtistId);
-                $stmt->execute();
-
-                // Hämtar den absoluta platsen till gamla filen
+                 // Hämtar den absoluta platsen till gamla filen
                 // Källa: http://php.net/realpath
                 $inPicturePath = realpath('upload_jpg/' . $inOldPictureFileName);
                 if(file_exists($inPicturePath)) {
                     // Ta bort gamla filen om den finns
                     unlink($inPicturePath);
                 }
-            }else{ // Annars uppdatera bara namnet
-                $stmt = $dbConnection->prepare('UPDATE tblartist SET name = ? WHERE id = ?;');
-                $stmt->bindParam(1, $inArtist);
-                $stmt->bindParam(2, $inArtistId);
-                $stmt->execute();
+            }else{ // Ingen uppdaterad bild, så smidigare kod fås genom att helt enkelt uppdatera med samma namn
+                $inNewPictureFileName = $inOldPictureFileName;
             }
+            // Allting uppdateras oavsett ändringar eller ej 
+            $stmt = $dbConnection->prepare('UPDATE tblartist SET picture = ?, name = ?, changedate = ? WHERE id = ?;');
+            $stmt->bindParam(1, $inNewPictureFileName);
+            $stmt->bindParam(2, $inArtist);
+            $stmt->bindParam(3, (date('Y-m-d H:i:s')));
+            $stmt->bindParam(4, $inArtistId);
+            $stmt->execute();
+
         }catch(Exception $e){
             echo 'Gick inte att uppdatera artist: ' . $e->getMessage();
         }
