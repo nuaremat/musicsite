@@ -23,7 +23,7 @@
     <h1>Search Artist and/or Song!</h1>
     <hr />
     <?php printSearchForm(); ?>
-    <fieldset><legend>Searchresult Song</legend>
+    
     <?php
         if(isset($error)) {
             echo $error;
@@ -35,7 +35,6 @@
             listArtists($db, $_POST['txtSearch']); 
         }
     ?>
-    </fieldset>
 </div>
 
 <?php include("incl/footer.php");

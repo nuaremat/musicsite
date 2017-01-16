@@ -74,7 +74,8 @@
             $tunes->bindParam(1, $inSearchString);
             $tunes->execute();
 	        // Start av låtutsökning
-	        // Kollar om det finns några rader i tabellen
+			echo '<fieldset><legend>Searchresult Song</legend>';
+	         // Kollar om det finns några rader i tabellen
 	        if ($tunes->rowCount() == 0) {
 	            echo ('Inga l&aring;tar matchar din s&ouml;kning!');
 	        } else {
@@ -86,6 +87,7 @@
 	                $artistid = $record['artistid'];
 	                $changedate = $record['changedate'];
 
+	                // Hade hellre använt konkatenering, men när listComments inte får returnera data och måste annvändas blir det ej ko.
 					echo '<span class="toggle-button"> Show all comments</span>';
 	        		echo ('<div data-comments="comments" data-id="' . $id . '" class="toggle-result">');
 	                listComments($inDBConnection, $id);
@@ -97,7 +99,9 @@
 	                echo ('<audio controls="controls"><source src="upload_ogg/' . $sound . '" />');
 	                echo ('Din webbl&auml;sare st&ouml;djer inte audio-taggen!</audio><br /></p><hr />');
 	            }
-	        } // Slut av låtutsökning
+	        }
+	        // Slut av låtutsökning
+	        echo '</fieldset>';
         } catch(Exception $e) {
         	echo 'Kunde inte visa l&aring;tar: ' . $e->getMessage();
         }
